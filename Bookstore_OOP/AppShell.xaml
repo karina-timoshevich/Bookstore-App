@@ -18,4 +18,14 @@
     ContentTemplate="{DataTemplate view:SignUpPage}"
     Route="SignUp" />
 
+    <ShellContent
+    Title="Home"
+    ContentTemplate="{DataTemplate view:UserMainPage}"
+    Route="UserMainPage" />
+
+    <ShellContent
+  Title="Home"
+  ContentTemplate="{DataTemplate view:AdminMainPage}"
+  Route="AdminMainPage" />
+
 </Shell>

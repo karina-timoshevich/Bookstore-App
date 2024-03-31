@@ -28,7 +28,7 @@
                >
             <ScrollView>
                 <VerticalStackLayout Spacing="25">
-                    <Label Text="SIGN IN" FontSize="28" FontAttributes="Bold" />
+                    <Label Text="SIGN UP" FontSize="28" FontAttributes="Bold" />
 
                     <Frame Padding="10" BorderColor="Transparent" CornerRadius="0">
                         <Grid ColumnDefinitions="25,*" ColumnSpacing="10">

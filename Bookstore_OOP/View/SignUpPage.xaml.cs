@@ -1,9 +1,16 @@
+using Bookstore_OOP.Services;
 namespace Bookstore_OOP.View;
+using Bookstore_OOP.ViewModel;
 
 public partial class SignUpPage : ContentPage
 {
-	public SignUpPage()
+    readonly DatabaseService _dbService;
+    readonly SignUpViewModel _signUpViewModel;
+	public SignUpPage(DatabaseService dbService, SignUpViewModel signUpViewModel )
 	{
+        this._dbService = dbService;
+        dbService?.InitDB();
+        this._signUpViewModel = signUpViewModel;
 		InitializeComponent();
 	}
 
@@ -12,30 +19,33 @@ public partial class SignUpPage : ContentPage
         await Shell.Current.GoToAsync("//SignIn");
     }
 
-    //private void Button_SignUp(object sender, EventArgs e)
-    //{
-    //    DatabaseService dbService = new DatabaseService();
-    //    dbService.CreateTable();
-
-    //    Bookstore_OOP.ViewModel.SignUpViewModel signUpViewModel = new Bookstore_OOP.ViewModel.SignUpViewModel();
-    //    signUpViewModel.TestFunction();
-    //}
-
     private void Button_SignUp(object sender, EventArgs e)
     {
-        DatabaseService dbService = new DatabaseService();
-        dbService.CreateTable();
-
         // Получение данных из полей ввода
-        string name = NameEntry.Text;
         string email = EmailEntry.Text;
+        string name = NameEntry.Text;
         string phoneNumber = MobileNumberEntry.Text;
         string password = PasswordEntry.Text;
+        
+        if (email == null || name == null || phoneNumber == null || password == null)
+        {
+            DisplayAlert("Ошибка", "Заполните все поля", "OK");
+            return;
+        }
+        else if(_dbService.CheckEmailExists(email))
+        {
+            DisplayAlert("Ошибка", "Пользователь с таким email уже существует", "OK");
+            return;
+        }
 
-        // Вставка данных в таблицу
-        dbService.InsertData(name, email);
+        else
+        {
+            DisplayAlert("Успех", "Регистрация прошла успешно", "OK");
+            _signUpViewModel.SignUpUser(_dbService, name, email, phoneNumber, password);
 
-        Bookstore_OOP.ViewModel.SignUpViewModel signUpViewModel = new Bookstore_OOP.ViewModel.SignUpViewModel();
-        signUpViewModel.TestFunction();
+            SignInViewModel signInViewModel = new SignInViewModel(_dbService);
+            Navigation.PushModalAsync(new SignInPage(signInViewModel));
+        }
+
     }
 }
