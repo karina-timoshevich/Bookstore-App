@@ -15,30 +15,35 @@ public partial class SignInPage : ContentPage
         await Shell.Current.GoToAsync("//SignUp");
     }
 
-    private void Sign_In_Button(object sender, EventArgs e)
+    private async void Sign_In_Button(object sender, EventArgs e)
     {
         string email = Email_Entry_SignIn.Text;
         string password = Password_Entry_SignIn.Text;
         if (email == null || password == null)
         {
-            DisplayAlert("Ошибка", "Заполните все поля", "OK");
+           await DisplayAlert("Ошибка", "Заполните все поля", "OK");
             return;
         }
         else
         {
             if (_signInViewModel.SignInUser(email, password))
             {
-               // DisplayAlert("Успех", "Вход выполнен успешно", "OK");
-               if (email == "admin" && password == "admin")
+                // DisplayAlert("Успех", "Вход выполнен успешно", "OK");
+                if (email == "admin" && password == "admin")
                 {
-                     Navigation.PushModalAsync(new AdminMainPage());
+                    //await Shell.Current.GoToAsync("//AdminMainPage");
+                    Application.Current.MainPage = new AdminShell();
                 }
-               else
-                Navigation.PushModalAsync(new UserMainPage());
+                else
+                {
+                    //await Shell.Current.GoToAsync("//UserMainPage");
+                    Application.Current.MainPage = new UserShell();
+                }
+                //await Navigation.PopAsync();
             }
             else
             {
-                DisplayAlert("Ошибка", "Неверный email или пароль", "OK");
+                await DisplayAlert("Ошибка", "Неверный email или пароль", "OK");
             }
         }
     }

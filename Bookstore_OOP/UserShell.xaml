@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       x:Class="Bookstore_OOP.View.UserShell"
+       xmlns:local="clr-namespace:Bookstore_OOP"
+       xmlns:view="clr-namespace:Bookstore_OOP.View"
+       Shell.FlyoutBehavior="Flyout">
+
+    <Shell.FlyoutFooter>
+        <Button Text="Log out"
+                Clicked="LogOut_Button"/>
+    </Shell.FlyoutFooter>
+
+    <FlyoutItem Title="TEST">
+        <Tab>
+            <ShellContent
+            Title="TEST2"
+            ContentTemplate="{DataTemplate view:UserMainPage}"
+            Route="UserMainPage" />
+        </Tab>
+    </FlyoutItem>
+
+</Shell>

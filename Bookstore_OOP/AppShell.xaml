@@ -5,27 +5,26 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Bookstore_OOP"
     xmlns:view="clr-namespace:Bookstore_OOP.View"
-    
     Shell.FlyoutBehavior="Disabled">
 
     <ShellContent
-        Title="Home"
+        Title="Sign In"
         ContentTemplate="{DataTemplate view:SignInPage}"
         Route="SignIn" />
 
     <ShellContent
-    Title="Home"
-    ContentTemplate="{DataTemplate view:SignUpPage}"
-    Route="SignUp" />
+        Title="Sign Up"
+        ContentTemplate="{DataTemplate view:SignUpPage}"
+        Route="SignUp" />
+
+    <!--<ShellContent
+        Title="User main page"
+        ContentTemplate="{DataTemplate view:UserMainPage}"
+        Route="UserMainPage" />
 
     <ShellContent
-    Title="Home"
-    ContentTemplate="{DataTemplate view:UserMainPage}"
-    Route="UserMainPage" />
-
-    <ShellContent
-  Title="Home"
-  ContentTemplate="{DataTemplate view:AdminMainPage}"
-  Route="AdminMainPage" />
+        Title="Admin main page"
+        ContentTemplate="{DataTemplate view:AdminMainPage}"
+        Route="AdminMainPage" />-->
 
 </Shell>
