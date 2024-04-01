@@ -6,8 +6,10 @@ public partial class SignUpPage : ContentPage
 {
     readonly DatabaseService _dbService;
     readonly SignUpViewModel _signUpViewModel;
-	public SignUpPage(DatabaseService dbService, SignUpViewModel signUpViewModel )
+    readonly IServiceProvider _serviceProvider;
+	public SignUpPage(DatabaseService dbService, SignUpViewModel signUpViewModel, IServiceProvider serviceProvider )
 	{
+        this._serviceProvider = serviceProvider;
         this._dbService = dbService;
         dbService?.InitDB();
         this._signUpViewModel = signUpViewModel;
@@ -44,7 +46,7 @@ public partial class SignUpPage : ContentPage
             _signUpViewModel.SignUpUser(_dbService, name, email, phoneNumber, password);
 
             SignInViewModel signInViewModel = new SignInViewModel(_dbService);
-            Navigation.PushModalAsync(new SignInPage(signInViewModel));
+            Navigation.PushModalAsync(new SignInPage(signInViewModel, _serviceProvider));
         }
 
     }

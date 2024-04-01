@@ -24,6 +24,9 @@ namespace Bookstore_OOP
             builder.Services.AddTransient<SignInViewModel>();
             builder.Services.AddTransient<SignInPage>();
 
+            builder.Services.AddTransient<AdminShell>();
+            builder.Services.AddTransient<UserShell>();
+
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif

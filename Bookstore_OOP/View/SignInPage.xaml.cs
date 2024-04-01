@@ -4,11 +4,12 @@ using Bookstore_OOP.ViewModel;
 public partial class SignInPage : ContentPage
 {
     readonly SignInViewModel _signInViewModel;
-
-    public SignInPage(SignInViewModel signInViewModel)
+    readonly IServiceProvider _serviceProvider;
+    public SignInPage(SignInViewModel signInViewModel, IServiceProvider serviceProvider)
     {
         this._signInViewModel = signInViewModel;
         InitializeComponent();
+        _serviceProvider = serviceProvider;
     }
     private async void TapGestureRecognizer_Tapped_For_SignUP(object sender, EventArgs e)
     {
@@ -28,16 +29,15 @@ public partial class SignInPage : ContentPage
         {
             if (_signInViewModel.SignInUser(email, password))
             {
-                // DisplayAlert("”спех", "¬ход выполнен успешно", "OK");
                 if (email == "admin" && password == "admin")
                 {
                     //await Shell.Current.GoToAsync("//AdminMainPage");
-                    Application.Current.MainPage = new AdminShell();
+                    Application.Current.MainPage = new AdminShell(_serviceProvider);
                 }
                 else
                 {
                     //await Shell.Current.GoToAsync("//UserMainPage");
-                    Application.Current.MainPage = new UserShell();
+                    Application.Current.MainPage = new UserShell(_serviceProvider);
                 }
                 //await Navigation.PopAsync();
             }

@@ -5,20 +5,21 @@ using Bookstore_OOP.Services;
 
 public partial class AdminShell : Shell
 {
-    //readonly DatabaseService _dbService;
-    public AdminShell()
-	{
-        //this._dbService = dbService;
-        //dbService?.InitDB();
+    private readonly IServiceProvider _serviceProvider;
+
+    public AdminShell(IServiceProvider serviceProvider)
+    {
+        _serviceProvider = serviceProvider;
         InitializeComponent();
         Routing.RegisterRoute("SignInPage", typeof(SignInPage));
     }
 
     private async void LogOutAdmin_Button(object sender, EventArgs e)
     {
-        // Navigate to the login page
-         await Shell.Current.GoToAsync("\\SignInPage");
-        //SignInViewModel signInViewModel = new SignInViewModel(_dbService);
-        //await Navigation.PushModalAsync(new SignInPage(signInViewModel));
+        var signInPage = _serviceProvider.GetRequiredService<SignInPage>();
+       // await Navigation.PushModalAsync(signInPage);
+        await Shell.Current.GoToAsync("SignInPage");
+        Application.Current.MainPage = new AppShell();
+
     }
 }
