@@ -45,8 +45,9 @@ public partial class SignUpPage : ContentPage
             DisplayAlert("Успех", "Регистрация прошла успешно", "OK");
             _signUpViewModel.SignUpUser(_dbService, name, email, phoneNumber, password);
 
-            SignInViewModel signInViewModel = new SignInViewModel(_dbService);
-            Navigation.PushModalAsync(new SignInPage(signInViewModel, _serviceProvider));
+            //SignInViewModel signInViewModel = new SignInViewModel(_dbService);
+            //Navigation.PushModalAsync(new SignInPage(signInViewModel, _serviceProvider));
+            Application.Current.MainPage = new AppShell();
         }
 
     }
