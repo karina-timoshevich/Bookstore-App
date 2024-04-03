@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Bookstore_OOP.Model;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace Bookstore_OOP.Services
     {
         private readonly string _connectionString;
         DatabaseService dbService;
+    
         public DatabaseService()
         {
             _connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
@@ -131,6 +133,43 @@ namespace Bookstore_OOP.Services
         {
             dbService = new DatabaseService();
             dbService.CreateTable();
+        }
+
+        public List<User> GetUsers()
+        {
+            var users = new List<User>();
+
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для получения всех пользователей
+                    cmd.CommandText = "SELECT * FROM Users";
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var user = new User
+                            {
+                                Id = (int)reader["ID"],
+                                Name = (string)reader["Name"],
+                                Email = (string)reader["Email"],
+                                PhoneNumber = (string)reader["MobileNumber"],
+                                Password = (string)reader["Password"]
+                            };
+
+                            users.Add(user);
+                        }
+                    }
+                }
+            }
+
+            return users;
         }
     }
 }
