@@ -17,7 +17,7 @@ namespace Bookstore_OOP
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            builder.Services.AddTransient<DatabaseService>();
+            builder.Services.AddSingleton<DatabaseService>();
             builder.Services.AddTransient<SignUpViewModel>();
             builder.Services.AddTransient<SignUpPage>();
 
@@ -27,8 +27,11 @@ namespace Bookstore_OOP
             builder.Services.AddTransient<AdminShell>();
             builder.Services.AddTransient<UserShell>();
 
+            builder.Services.AddTransient<AddUserViewModel>();
+            builder.Services.AddTransient<AddUserView>();
+
 #if DEBUG
-		builder.Logging.AddDebug();
+builder.Logging.AddDebug();
 #endif
 
             return builder.Build();

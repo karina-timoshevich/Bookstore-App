@@ -40,26 +40,43 @@
                        MinimumHeightRequest="485"
                        MaximumHeightRequest="485"
                        ItemsSource="{Binding Users}"
-                     
+                       SelectedItem="{Binding SelectedUser}"
                        BackgroundColor="Transparent"
                        VerticalScrollBarVisibility="Never"
                        HorizontalScrollBarVisibility="Never">
 
+                    <ListView.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="3*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Column="0" Text="Id" FontSize="Medium" HorizontalOptions="Center" />
+                            <Label Grid.Column="1" Text="Name" FontSize="Medium" HorizontalOptions="Center" />
+                            <Label Grid.Column="2" Text="Email" FontSize="Medium" HorizontalOptions="Center" />
+                            <Label Grid.Column="3" Text="Mobile" FontSize="Medium" HorizontalOptions="Center" />
+                        </Grid>
+                    </ListView.Header>
+
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="{x:Type model:User}">
                             <ViewCell>
-                                <HorizontalStackLayout Spacing="20"
-                                                    HeightRequest="50">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
 
-                                    <Label Text="{Binding Id, StringFormat='№: {0}'}"
-                                        FontSize="Medium"
-                                        VerticalOptions="Center" />
-
-                                    <Label Text="{Binding Name, StringFormat='Name: {0}'}"
-                                         FontSize="Medium"
-                                         VerticalOptions="Center" />
-
-                                </HorizontalStackLayout>
+                                    <Label Grid.Column="0" Text="{Binding Id}" FontSize="Medium" VerticalOptions="Center" />
+                                    <Label Grid.Column="1" Text="{Binding Name}" FontSize="Medium" VerticalOptions="Center" />
+                                    <Label Grid.Column="2" Text="{Binding Email}" FontSize="Medium" VerticalOptions="Center" />
+                                    <Label Grid.Column="3" Text="{Binding PhoneNumber}" FontSize="Medium" VerticalOptions="Center" />
+                                </Grid>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -69,7 +86,21 @@
             </Border>
 
             <!-- Control Buttons -->
-           
+            <Button Grid.Row="3"
+                 Grid.Column="0"
+                 Margin="20, 0, 0, 20"
+                 Text="Add User"
+                 Command="{Binding AddUserCommand}" />
+            <Button Grid.Row="3"
+                 Grid.Column="1"
+                 Margin="0, 0, 0, 20"
+                 Text="Remove User"
+                 Command="{Binding RemoveUserCommand}" />
+            <Button Grid.Row="3"
+                 Grid.Column="2"
+                 Margin="0, 0, 20, 20"
+                 Text="Ban/Unban User"
+                 Command="{Binding AddUserCommand}" />  
 
         </Grid>
     </ScrollView>

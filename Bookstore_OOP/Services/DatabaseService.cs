@@ -171,5 +171,24 @@ namespace Bookstore_OOP.Services
 
             return users;
         }
+
+        public void DeleteUser(int id)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для удаления пользователя по ID
+                    cmd.CommandText = "DELETE FROM Users WHERE ID = @id";
+                    cmd.Parameters.AddWithValue("id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

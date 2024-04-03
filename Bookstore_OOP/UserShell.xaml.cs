@@ -8,6 +8,7 @@ public partial class UserShell : Shell
         _serviceProvider = serviceProvider;
         InitializeComponent();
         Routing.RegisterRoute("SignInPage", typeof(SignInPage));
+       
     }
 
     private async void LogOut_Button(object sender, EventArgs e)

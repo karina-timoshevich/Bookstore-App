@@ -12,6 +12,7 @@ public partial class AdminShell : Shell
         _serviceProvider = serviceProvider;
         InitializeComponent();
         Routing.RegisterRoute("SignInPage", typeof(SignInPage));
+        Routing.RegisterRoute("AddUserView", typeof(AddUserView));
     }
 
     private async void LogOutAdmin_Button(object sender, EventArgs e)

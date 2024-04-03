@@ -26,4 +26,13 @@
         </Tab>
     </FlyoutItem>
 
+    <FlyoutItem Title="UserList">
+        <Tab>
+            <ShellContent
+           Title="UserList"
+           ContentTemplate="{DataTemplate view:UserListView}"
+           Route="UserListView" />
+        </Tab>
+    </FlyoutItem>
+
 </Shell>

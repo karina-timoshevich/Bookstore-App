@@ -14,7 +14,10 @@ using System.Threading.Tasks;*/
 using Bookstore_OOP.Model;
 using Bookstore_OOP.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using Bookstore_OOP.View;
 
 namespace Bookstore_OOP.ViewModel
 {
@@ -29,6 +32,27 @@ namespace Bookstore_OOP.ViewModel
         {
             dbService.InitDB();
             Users = new ObservableCollection<User>(dbService.GetUsers());
+        }
+        [RelayCommand]
+        private async Task RemoveUserAsync()
+        {
+            if (SelectedUser != null)
+            {
+              //  await DatabaseService<User>.RemoveColumnAsync(SelectedUser.Id);
+                dbService.DeleteUser(SelectedUser.Id);
+                Users.Remove(SelectedUser);
+
+                SelectedUser = null;
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("No user selected", "Please select and try again.", "Ok");
+            }
+        }
+        [RelayCommand]
+        private async Task AddUserAsync()
+        {
+            await Shell.Current.GoToAsync(nameof(AddUserView));
         }
 
     }
