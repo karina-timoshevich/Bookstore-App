@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Bookstore_OOP.View.AddBookView"
+             xmlns:viewmodel="clr-namespace:Bookstore_OOP.ViewModel"
+             x:DataType="viewmodel:AddBookViewModel"
+             Title="AddBookView"
+             Shell.FlyoutBehavior="Disabled"
+             Shell.NavBarIsVisible="False">
+
+    <!-- Remove Back Button Behavior -->
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsVisible="False"
+                            IsEnabled="False" />
+    </Shell.BackButtonBehavior>
+
+    <ScrollView>
+        <Grid RowDefinitions="auto, auto, auto"
+              ColumnDefinitions="*, *"
+              ColumnSpacing="20"
+              RowSpacing="20">
+
+            <!-- Title -->
+            <Label Grid.Row="0"
+                   Grid.ColumnSpan="2"
+                   Text="Add Book"
+                   FontSize="Header"
+                   Margin="0, 10, 0, 0"
+                   HorizontalOptions="Center" />
+
+            <!-- Entries -->
+            <VerticalStackLayout Grid.Row="1"
+                                 Grid.ColumnSpan="2"
+                                 Spacing="10"
+                                 Margin="100, 0, 100, 0">
+
+                <Border>
+                    <Entry Placeholder="Title"
+                           Text="{Binding Book.Title}" />
+                </Border>
+                <Border>
+                    <Picker Title="Author"
+                            ItemsSource="{Binding Authors}"
+                            SelectedItem="{Binding SelectedAuthor}" 
+                            ItemDisplayBinding="{Binding Id}"/>
+                </Border>
+                <Border>
+                    <Entry Placeholder="Publisher"
+                           Text="{Binding Book.Publisher}" />
+                </Border>
+                <Border>
+                    <Entry Placeholder="Year"
+                           Text="{Binding Book.Year}" />
+                </Border>
+                <Border>
+                    <Entry Placeholder="Genre"
+                           Text="{Binding Book.Genre}" />
+                </Border>
+                <Border>
+                    <Entry Placeholder="Price"
+                           Text="{Binding Book.Price}" />
+                </Border>
+
+            </VerticalStackLayout>
+
+            <!-- Control Buttons -->
+            <Button Grid.Row="2"
+                    Grid.Column="0"
+                    Margin="100, 0, 0, 20"
+                    Text="Back"
+                    Command="{Binding BackCommand}" 
+                    />
+            <Button Grid.Row="2"
+                    Grid.Column="1"
+                    Margin="0, 0, 100, 20"
+                    Text="Add"
+                    Command="{Binding AddCommand}" />
+
+        </Grid>
+    </ScrollView>
+
+</ContentPage>

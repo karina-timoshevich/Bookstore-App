@@ -62,6 +62,47 @@ namespace Bookstore_OOP.Services
                                     );";
                     command.ExecuteNonQuery();
                     Debug.WriteLine("Таблица 'BannedUsers' успешно создана или уже существует.");
+
+
+                    // Создание таблицы Authors
+                    command.CommandText = @"CREATE TABLE IF NOT EXISTS Authors (
+                                ID SERIAL PRIMARY KEY,
+                                FullName VARCHAR(100)
+                                );";
+                    command.ExecuteNonQuery();
+                    Debug.WriteLine("Таблица 'Authors' успешно создана или уже существует.");
+
+                    // Создание таблицы Books
+                    command.CommandText = @"CREATE TABLE IF NOT EXISTS Books (
+                                ID SERIAL PRIMARY KEY,
+                                Title VARCHAR(100),
+                                AuthorID INTEGER REFERENCES Authors(ID),
+                                Publisher VARCHAR(100),
+                                Year INTEGER,
+                                Genre VARCHAR(100),
+                                Price DECIMAL
+                                );";
+                    command.ExecuteNonQuery();
+                    Debug.WriteLine("Таблица 'Books' успешно создана или уже существует.");
+
+                    // Создание таблицы Orders
+                    command.CommandText = @"CREATE TABLE IF NOT EXISTS Orders (
+                                ID SERIAL PRIMARY KEY,
+                                UserID INTEGER REFERENCES Users(ID),
+                                OrderDate DATE,
+                                TotalPrice DECIMAL
+                                );";
+                    command.ExecuteNonQuery();
+                    Debug.WriteLine("Таблица 'Orders' успешно создана или уже существует.");
+
+                    // Создание таблицы OrderItems
+                    command.CommandText = @"CREATE TABLE IF NOT EXISTS OrderItems (
+                                ID SERIAL PRIMARY KEY,
+                                OrderID INTEGER REFERENCES Orders(ID),
+                                Quantity INTEGER
+                                );";
+                    command.ExecuteNonQuery();
+                    Debug.WriteLine("Таблица 'OrderItems' успешно создана или уже существует.");
                 }
             }
         }
@@ -87,6 +128,30 @@ namespace Bookstore_OOP.Services
             }
         }
 
+        public void AddBook(Book book)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для добавления новой книги
+                    cmd.CommandText = "INSERT INTO Books (Title, AuthorID, Publisher, Year, Genre, Price) VALUES (@title, @authorId, @publisher, @year, @genre, @price)";
+                    cmd.Parameters.AddWithValue("title", book.Title);
+                    cmd.Parameters.AddWithValue("authorId", book.AuthorID);
+                    cmd.Parameters.AddWithValue("publisher", book.Publisher);
+                    cmd.Parameters.AddWithValue("year", book.Year);
+                    cmd.Parameters.AddWithValue("genre", book.Genre);
+                    cmd.Parameters.AddWithValue("price", book.Price);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         public bool CheckEmailExists(string email)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
@@ -100,6 +165,25 @@ namespace Bookstore_OOP.Services
                     // SQL-запрос для проверки существования email
                     cmd.CommandText = "SELECT EXISTS (SELECT 1 FROM Users WHERE Email = @email)";
                     cmd.Parameters.AddWithValue("email", email);
+
+                    return (bool)cmd.ExecuteScalar();
+                }
+            }
+        }
+
+        public bool CheckBookExists(string title)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для проверки существования книги
+                    cmd.CommandText = "SELECT EXISTS (SELECT 1 FROM Books WHERE Title = @title)";
+                    cmd.Parameters.AddWithValue("title", title);
 
                     return (bool)cmd.ExecuteScalar();
                 }
@@ -178,6 +262,80 @@ namespace Bookstore_OOP.Services
             return users;
         }
 
+        public List<Book> GetBooks()
+        {
+            var books = new List<Book>();
+
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для получения всех книг
+                    cmd.CommandText = "SELECT * FROM Books";
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var book = new Book
+                            {
+                                Id = int.Parse((string)reader["ID"]),
+                                Title = (string)reader["Title"],
+                                AuthorID = int.Parse((string)reader["AuthorID"]),
+                                Publisher = (string)reader["Publisher"],
+                                Year = int.Parse((string)reader["Year"]),
+                                Genre = (string)reader["Genre"],
+                                Price = int.Parse((string)reader["Price"])
+                            };
+
+                            books.Add(book);
+                        }
+                    }
+                }
+            }
+
+            return books;
+        }
+
+        public List<Author> GetAuthors()
+        {
+            var authors = new List<Author>();
+
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для выбора всех авторов
+                    cmd.CommandText = "SELECT * FROM Authors";
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var author = new Author
+                            {
+                                Id = reader.GetInt32(0),
+                                FullName = reader.GetString(1),
+                                // Добавьте остальные поля автора, если они есть
+                            };
+
+                            authors.Add(author);
+                        }
+                    }
+                }
+            }
+
+            return authors;
+        }
+
         public void DeleteUser(int id)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
@@ -190,6 +348,25 @@ namespace Bookstore_OOP.Services
 
                     // SQL-запрос для удаления пользователя по ID
                     cmd.CommandText = "DELETE FROM Users WHERE ID = @id";
+                    cmd.Parameters.AddWithValue("id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteBook(int id)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для удаления книги по ID
+                    cmd.CommandText = "DELETE FROM Books WHERE ID = @id";
                     cmd.Parameters.AddWithValue("id", id);
 
                     cmd.ExecuteNonQuery();

@@ -35,4 +35,14 @@
         </Tab>
     </FlyoutItem>
 
+    <FlyoutItem Title="BookList">
+        <Tab>
+            <ShellContent
+           Title="BookList"
+           ContentTemplate="{DataTemplate view:BookListView}"
+           Route="BookListView" />
+        </Tab>
+    </FlyoutItem>
+    
+
 </Shell>

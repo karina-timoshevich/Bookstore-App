@@ -13,6 +13,7 @@ public partial class AdminShell : Shell
         InitializeComponent();
         Routing.RegisterRoute("SignInPage", typeof(SignInPage));
         Routing.RegisterRoute("AddUserView", typeof(AddUserView));
+        Routing.RegisterRoute("AddBookView", typeof(AddBookView));
     }
 
     private async void LogOutAdmin_Button(object sender, EventArgs e)

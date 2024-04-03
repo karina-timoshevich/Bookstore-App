@@ -30,6 +30,10 @@ namespace Bookstore_OOP
             builder.Services.AddTransient<AddUserViewModel>();
             builder.Services.AddTransient<AddUserView>();
 
+            builder.Services.AddTransient<AddBookViewModel>();
+            builder.Services.AddTransient<AddBookView>();
+           
+
 #if DEBUG
 builder.Logging.AddDebug();
 #endif
