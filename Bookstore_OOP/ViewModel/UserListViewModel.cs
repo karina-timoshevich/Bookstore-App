@@ -55,5 +55,20 @@ namespace Bookstore_OOP.ViewModel
             await Shell.Current.GoToAsync(nameof(AddUserView));
         }
 
+        [RelayCommand]
+        private async Task BunUser()
+        {
+            if (dbService.IsUserBannedById(_selectedUser.Id))
+            {
+                await dbService.UnbanUser(_selectedUser.Id);
+                await Shell.Current.DisplayAlert("Title", "Unbun", "ok");
+            }
+            else
+            {
+                await dbService.BanUser(_selectedUser.Id);
+                await Shell.Current.DisplayAlert("Title", "bun", "ok");
+            }
+            }
+
     }
 }

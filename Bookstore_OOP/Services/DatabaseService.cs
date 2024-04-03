@@ -43,12 +43,9 @@ namespace Bookstore_OOP.Services
                     command.ExecuteNonQuery();
                     // Console.WriteLine("Таблица 'Users' успешно создана или уже существует.");
                     Debug.WriteLine("Таблица 'Users' успешно создана или уже существует.");
-
-
                     // Проверка на существование админа в таблице
                     command.CommandText = @"SELECT EXISTS (SELECT 1 FROM Users WHERE Email = 'admin');";
                     var adminExists = (bool)command.ExecuteScalar();
-
                     // Если админа нет, то добавляем
                     if (!adminExists)
                     {
@@ -57,6 +54,14 @@ namespace Bookstore_OOP.Services
                         command.ExecuteNonQuery();
                         Debug.WriteLine("Администратор по умолчанию успешно добавлен.");
                     }
+
+
+                    // Создание таблицы BannedUsers
+                    command.CommandText = @"CREATE TABLE IF NOT EXISTS BannedUsers (
+                                    UserID INTEGER REFERENCES Users(ID)
+                                    );";
+                    command.ExecuteNonQuery();
+                    Debug.WriteLine("Таблица 'BannedUsers' успешно создана или уже существует.");
                 }
             }
         }
@@ -129,6 +134,7 @@ namespace Bookstore_OOP.Services
                 }
             }
         }
+
         public void InitDB()
         {
             dbService = new DatabaseService();
@@ -187,6 +193,63 @@ namespace Bookstore_OOP.Services
                     cmd.Parameters.AddWithValue("id", id);
 
                     cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public async Task BanUser(int id)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для добавления пользователя в таблицу BannedUsers
+                    cmd.CommandText = "INSERT INTO BannedUsers (UserID) VALUES (@id)";
+                    cmd.Parameters.AddWithValue("id", id);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public async Task UnbanUser(int id)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для удаления пользователя из таблицы BannedUsers
+                    cmd.CommandText = "DELETE FROM BannedUsers WHERE UserID = @id";
+                    cmd.Parameters.AddWithValue("id", id);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public bool IsUserBannedById(int id)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для проверки наличия пользователя в таблице BannedUsers по ID
+                    cmd.CommandText = "SELECT EXISTS (SELECT 1 FROM BannedUsers WHERE UserID = @id)";
+                    cmd.Parameters.AddWithValue("id", id);
+
+                    return (bool)cmd.ExecuteScalar();
                 }
             }
         }

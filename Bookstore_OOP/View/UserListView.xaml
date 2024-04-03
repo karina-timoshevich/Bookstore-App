@@ -100,7 +100,7 @@
                  Grid.Column="2"
                  Margin="0, 0, 20, 20"
                  Text="Ban/Unban User"
-                 Command="{Binding AddUserCommand}" />  
+                 Command="{Binding BunUserCommand}" />  
 
         </Grid>
     </ScrollView>
