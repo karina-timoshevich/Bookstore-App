@@ -38,6 +38,12 @@ namespace Bookstore_OOP.ViewModel
         }
 
         [RelayCommand]
+        private static async Task BackAsync()
+        {
+            await Shell.Current.Navigation.PopAsync();
+        }
+
+        [RelayCommand]
         private async Task AddAsync()
         {
             if (IsAnyNullOrEmpty(User))
@@ -56,7 +62,7 @@ namespace Bookstore_OOP.ViewModel
                 _dbService.InsertData(_user.Name, _user.Email, _user.PhoneNumber, _user.Password);
                 await Shell.Current.DisplayAlert("User added successfully", "Press Ok and return to the user list", "Ok");
 
-                //BackCommand.Execute(null);
+                BackCommand.Execute(null);
             }
         }
     }

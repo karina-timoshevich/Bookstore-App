@@ -16,7 +16,7 @@ namespace Bookstore_OOP.Model
         private string _password;
         private string _Name;
         private string _phoneNumber;
-        private string _address;
+       // private string _address;
 
         // [PrimaryKey, AutoIncrement]
         [Key]
@@ -26,6 +26,6 @@ namespace Bookstore_OOP.Model
         public string Password { get => _password; set => _password = value; }
         public string Name { get => _Name; set => _Name = value; }
         public string PhoneNumber { get => _phoneNumber; set => _phoneNumber = value; }
-        public string Address { get => _address; set => _address = value; }
+       // public string Address { get => _address; set => _address = value; }
     }
 }

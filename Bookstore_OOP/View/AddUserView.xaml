@@ -62,7 +62,7 @@
                     Grid.Column="0"
                     Margin="100, 0, 0, 20"
                     Text="Back"
-                  
+                    Command="{Binding BackCommand}" 
                     />
             <Button Grid.Row="2"
                     Grid.Column="1"
