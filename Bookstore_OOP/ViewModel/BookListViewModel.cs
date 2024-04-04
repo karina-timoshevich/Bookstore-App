@@ -11,24 +11,24 @@ namespace Bookstore_OOP.ViewModel
     public partial class BookListViewModel : ObservableObject
     {
         [ObservableProperty]
-        private Book _selectedBook;
+        private BookDisplay _selectedBook;
         [ObservableProperty]
-        private ObservableCollection<Book> _books;
+        private ObservableCollection<BookDisplay> _books;
         //[ObservableProperty]
         //private ObservableCollection<Author> _authors;
         DatabaseService dbService = new DatabaseService();
         public BookListViewModel()
         {
             dbService.InitDB();
-            Books = new ObservableCollection<Book>(dbService.GetBooks());
-          //  Authors = new ObservableCollection<Author>(dbService.GetAuthors());
+            Books = new ObservableCollection<BookDisplay>(dbService.GetBooks());
+            //  Authors = new ObservableCollection<Author>(dbService.GetAuthors());
         }
         [RelayCommand]
         private async Task RemoveBookAsync()
         {
             if (SelectedBook != null)
             {
-                dbService.DeleteBook(SelectedBook.Id);
+                dbService.DeleteBook(SelectedBook.Book.Id);
                 Books.Remove(SelectedBook);
 
                 SelectedBook = null;
@@ -49,6 +49,6 @@ namespace Bookstore_OOP.ViewModel
         {
 
         }
-   
+
     }
 }

@@ -42,7 +42,7 @@
                     <Picker Title="Author"
                             ItemsSource="{Binding Authors}"
                             SelectedItem="{Binding SelectedAuthor}" 
-                            ItemDisplayBinding="{Binding Id}"/>
+                            ItemDisplayBinding="{Binding FullName}"/>
                 </Border>
                 <Border>
                     <Entry Placeholder="Publisher"

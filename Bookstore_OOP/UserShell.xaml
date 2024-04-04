@@ -20,6 +20,24 @@
         </Tab>
     </FlyoutItem>
 
- 
+    <FlyoutItem Title="SHOP">
+        <Tab>
+            <ShellContent
+         Title="SHOP"
+         ContentTemplate="{DataTemplate view:DirectoryView}"
+         Route="DirectoryView" />
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Title="CART">
+        <Tab>
+            <ShellContent
+         Title="CART"
+         ContentTemplate="{DataTemplate view:CartView}"
+         Route="CartView" />
+        </Tab>
+    </FlyoutItem>
+
+
 
 </Shell>

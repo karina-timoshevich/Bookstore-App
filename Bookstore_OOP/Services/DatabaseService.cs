@@ -85,6 +85,17 @@ namespace Bookstore_OOP.Services
                     command.ExecuteNonQuery();
                     Debug.WriteLine("Таблица 'Books' успешно создана или уже существует.");
 
+                    // Создание таблицы CartItems
+                    command.CommandText = @"CREATE TABLE IF NOT EXISTS CartItems (
+                            ID SERIAL PRIMARY KEY,
+                            UserId INTEGER REFERENCES Users(ID),
+                            BookId INTEGER REFERENCES Books(ID),
+                            Quantity INTEGER
+                            );";
+                    command.ExecuteNonQuery();
+                    Debug.WriteLine("Таблица 'CartItems' успешно создана или уже существует.");
+
+
                     // Создание таблицы Orders
                     command.CommandText = @"CREATE TABLE IF NOT EXISTS Orders (
                                 ID SERIAL PRIMARY KEY,
@@ -103,9 +114,12 @@ namespace Bookstore_OOP.Services
                                 );";
                     command.ExecuteNonQuery();
                     Debug.WriteLine("Таблица 'OrderItems' успешно создана или уже существует.");
+
+
                 }
             }
         }
+
 
         public void InsertData(string name, string email, string mobilenumber, string password)
         {
@@ -238,7 +252,7 @@ namespace Bookstore_OOP.Services
                     cmd.Connection = connection;
 
                     // SQL-запрос для получения всех пользователей
-                    cmd.CommandText = "SELECT * FROM Users";
+                    cmd.CommandText = "SELECT * FROM Users WHERE Email != 'admin'";
 
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -262,9 +276,38 @@ namespace Bookstore_OOP.Services
             return users;
         }
 
-        public List<Book> GetBooks()
+        public string GetAuthorNameById(int id)
         {
-            var books = new List<Book>();
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL query to get the author's name by ID
+                    cmd.CommandText = "SELECT FullName FROM Authors WHERE ID = @id";
+                    cmd.Parameters.AddWithValue("id", id);
+
+                    var result = cmd.ExecuteScalar();
+                    if (result != null)
+                    {
+                        // Return the author's name
+                        return result.ToString();
+                    }
+                    else
+                    {
+                        // No author with such ID found
+                        return null;
+                    }
+                }
+            }
+        }
+
+        public List<BookDisplay> GetBooks()
+        {
+            var books = new List<BookDisplay>();
 
             using (var connection = new NpgsqlConnection(_connectionString))
             {
@@ -283,16 +326,22 @@ namespace Bookstore_OOP.Services
                         {
                             var book = new Book
                             {
-                                Id = int.Parse((string)reader["ID"]),
+                                Id = (int)reader["ID"],
                                 Title = (string)reader["Title"],
-                                AuthorID = int.Parse((string)reader["AuthorID"]),
+                                AuthorID = (int)reader["AuthorID"],
                                 Publisher = (string)reader["Publisher"],
-                                Year = int.Parse((string)reader["Year"]),
+                                Year = (int)reader["Year"],
                                 Genre = (string)reader["Genre"],
-                                Price = int.Parse((string)reader["Price"])
+                                Price = (decimal)reader["Price"]
                             };
 
-                            books.Add(book);
+                            var authorName = GetAuthorNameById(book.AuthorID);
+
+                            books.Add(new BookDisplay
+                            {
+                                Book = book,
+                                AuthorName = authorName
+                            });
                         }
                     }
                 }
@@ -429,6 +478,100 @@ namespace Bookstore_OOP.Services
                     return (bool)cmd.ExecuteScalar();
                 }
             }
+        }
+
+        public void SaveCartItems(List<CartItem> cartItems)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                foreach (var item in cartItems)
+                {
+                    using (var cmd = new NpgsqlCommand())
+                    {
+                        cmd.Connection = connection;
+
+                        // SQL-запрос для сохранения элементов корзины
+                        cmd.CommandText = "INSERT INTO CartItems (UserId, BookId, Quantity) VALUES (@userId, @bookId, @quantity) ON CONFLICT (UserId, BookId) DO UPDATE SET Quantity = @quantity";
+                        cmd.Parameters.AddWithValue("userId", item.UserId);
+                        cmd.Parameters.AddWithValue("bookId", item.Book.Id);
+                        cmd.Parameters.AddWithValue("quantity", item.Quantity);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        public List<CartItem> LoadCartItems(int userId)
+        {
+            var cartItems = new List<CartItem>();
+
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для загрузки элементов корзины
+                    cmd.CommandText = "SELECT * FROM CartItems WHERE UserId = @userId";
+                    cmd.Parameters.AddWithValue("userId", userId);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var bookId = (int)reader["BookId"];
+                            var quantity = (int)reader["Quantity"];
+
+                            var book = GetBookById(bookId);
+
+                            cartItems.Add(new CartItem { UserId = userId, Book = book, Quantity = quantity });
+                        }
+                    }
+                }
+            }
+
+            return cartItems;
+        }
+
+        public Book GetBookById(int id)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для получения книги по ID
+                    cmd.CommandText = "SELECT * FROM Books WHERE ID = @id";
+                    cmd.Parameters.AddWithValue("id", id);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Book
+                            {
+                                Id = (int)reader["ID"],
+                                Title = (string)reader["Title"],
+                                AuthorID = (int)reader["AuthorID"],
+                                Publisher = (string)reader["Publisher"],
+                                Year = (int)reader["Year"],
+                                Genre = (string)reader["Genre"],
+                                Price = (decimal)reader["Price"]
+                            };
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }

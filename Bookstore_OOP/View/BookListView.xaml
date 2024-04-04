@@ -24,9 +24,9 @@
              Margin="30, 0, 0, 0">
 
                 <!--<SearchBar FontSize="Medium"
-                    Placeholder="Search..."
-                    Text="{Binding SearchText}"
-                    SearchCommand="{Binding SearchCommand}" />-->
+            Placeholder="Search..."
+            Text="{Binding SearchText}"
+            SearchCommand="{Binding SearchCommand}"></SearchBar>-->
 
             </Border>
 
@@ -61,7 +61,7 @@
                     </ListView.Header>
 
                     <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="{x:Type model:Book}">
+                        <DataTemplate x:DataType="{x:Type model:BookDisplay}">
                             <ViewCell>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -71,10 +71,10 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Label Grid.Column="0" Text="{Binding Id}" FontSize="Medium" VerticalOptions="Center" />
-                                    <Label Grid.Column="1" Text="{Binding Title}" FontSize="Medium" VerticalOptions="Center" />
-                                    <Label Grid.Column="2" Text="{Binding AuthorID}" FontSize="Medium" VerticalOptions="Center" />
-                                    <Label Grid.Column="3" Text="{Binding Price}" FontSize="Medium" VerticalOptions="Center" />
+                                    <Label Grid.Column="0" Text="{Binding Book.Id}" FontSize="Medium" VerticalOptions="Center" />
+                                    <Label Grid.Column="1" Text="{Binding Book.Title}" FontSize="Medium" VerticalOptions="Center" />
+                                    <Label Grid.Column="2" Text="{Binding Book.AuthorID}" FontSize="Medium" VerticalOptions="Center" />
+                                    <Label Grid.Column="3" Text="{Binding Book.Price}" FontSize="Medium" VerticalOptions="Center" />
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>

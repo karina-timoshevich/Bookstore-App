@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Bookstore_OOP.View.DirectoryView"
+             xmlns:model="clr-namespace:Bookstore_OOP.Model"
+             Title="Shop">
+
+    <!-- Book List -->
+    <Border Grid.Row="2"
+  Grid.ColumnSpan="3"
+  Margin="30, 0, 30, 0">
+
+        <ListView HasUnevenRows="True"
+        MinimumHeightRequest="485"
+        MaximumHeightRequest="485"
+        ItemsSource="{Binding Books}"
+        SelectedItem="{Binding SelectedBook}"
+        BackgroundColor="Transparent"
+        VerticalScrollBarVisibility="Never"
+        HorizontalScrollBarVisibility="Never">
+
+            <ListView.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+
+
+                    <!--<Label Grid.Column="0" Text="Title" FontSize="Medium" HorizontalOptions="Center" />
+                    <Label Grid.Column="1" Text="AuthorID" FontSize="Medium" HorizontalOptions="Center" />
+                    <Label Grid.Column="2" Text="Price" FontSize="Medium" HorizontalOptions="Center" />-->
+                </Grid>
+            </ListView.Header>
+
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type model:BookDisplay}">
+
+                    <ViewCell>
+                        <Frame BorderColor="BlueViolet" CornerRadius="5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Label Grid.Column="0" Text="{Binding Book.Title}" FontSize="Medium" VerticalOptions="Center" />
+                                <Label Grid.Column="1" Text="{Binding AuthorName}" FontSize="Medium" VerticalOptions="Center" />
+                                <Label Grid.Column="2" Text="{Binding Book.Price}" FontSize="Medium" VerticalOptions="Center" />
+                                <Button Grid.Column="3" TextColor="White" Text="ADD TO CART" Command="{Binding Path=BindingContext.AddToCartCommand, Source={x:Reference Name=DirectoryViewModel}}" CommandParameter="{Binding}" />
+
+                            </Grid>
+                        </Frame>
+
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+        </ListView>
+
+    </Border>
+
+</ContentPage>

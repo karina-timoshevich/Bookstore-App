@@ -27,6 +27,10 @@ namespace Bookstore_OOP.ViewModel
         private User _selectedUser;
         [ObservableProperty]
         private ObservableCollection<User> _users;
+
+        //[ObservableProperty]
+        //private string _searchText;
+
         DatabaseService dbService = new DatabaseService();
         public UserListViewModel()
         {
@@ -38,7 +42,7 @@ namespace Bookstore_OOP.ViewModel
         {
             if (SelectedUser != null)
             {
-              //  await DatabaseService<User>.RemoveColumnAsync(SelectedUser.Id);
+                //  await DatabaseService<User>.RemoveColumnAsync(SelectedUser.Id);
                 dbService.DeleteUser(SelectedUser.Id);
                 Users.Remove(SelectedUser);
 
@@ -49,6 +53,8 @@ namespace Bookstore_OOP.ViewModel
                 await Shell.Current.DisplayAlert("No user selected", "Please select and try again.", "Ok");
             }
         }
+
+
         [RelayCommand]
         private async Task AddUserAsync()
         {
@@ -68,7 +74,7 @@ namespace Bookstore_OOP.ViewModel
                 await dbService.BanUser(_selectedUser.Id);
                 await Shell.Current.DisplayAlert("Title", "bun", "ok");
             }
-            }
+        }
 
     }
 }
