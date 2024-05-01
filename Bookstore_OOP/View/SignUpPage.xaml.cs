@@ -1,6 +1,7 @@
 using Bookstore_OOP.Services;
 namespace Bookstore_OOP.View;
 using Bookstore_OOP.ViewModel;
+using System.Text.RegularExpressions;
 
 public partial class SignUpPage : ContentPage
 {
@@ -39,7 +40,20 @@ public partial class SignUpPage : ContentPage
             DisplayAlert("Ошибка", "Пользователь с таким email уже существует", "OK");
             return;
         }
-
+        else if(!Regex.IsMatch(email, @"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"))
+        {
+            DisplayAlert("Ошибка", "Некорректный email", "OK");
+            return;
+        }
+        else if (!Regex.IsMatch(phoneNumber, @"\+375(\s*\d){9}$"))
+        {
+            DisplayAlert("Ошибка", "Некорректный номер телефона", "OK");
+        }
+        else if(password.Length < 6)
+        {
+            DisplayAlert("Ошибка", "Пароль должен содержать не менее 6 символов", "OK");
+            return;
+        }
         else
         {
             DisplayAlert("Успех", "Регистрация прошла успешно", "OK");
