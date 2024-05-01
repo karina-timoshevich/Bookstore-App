@@ -19,6 +19,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Bookstore_OOP.View;
 
+
 namespace Bookstore_OOP.ViewModel
 {
     public partial class UserListViewModel : ObservableObject
@@ -28,8 +29,8 @@ namespace Bookstore_OOP.ViewModel
         [ObservableProperty]
         private ObservableCollection<User> _users;
 
-        //[ObservableProperty]
-        //private string _searchText;
+        [ObservableProperty]
+        private string _searchText;
 
         DatabaseService dbService = new DatabaseService();
         public UserListViewModel()
@@ -73,6 +74,19 @@ namespace Bookstore_OOP.ViewModel
             {
                 await dbService.BanUser(_selectedUser.Id);
                 await Shell.Current.DisplayAlert("Title", "bun", "ok");
+            }
+        }
+
+        [RelayCommand]
+        private void SearchUser()
+        {
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                Users = new ObservableCollection<User>(dbService.GetUsers());
+            }
+            else
+            {
+                Users = new ObservableCollection<User>(dbService.GetUsers().Where(user => user.Name.Contains(SearchText)));
             }
         }
 

@@ -1,42 +1,50 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Bookstore_OOP.View.UserListView"
              xmlns:model="clr-namespace:Bookstore_OOP.Model"
+             xmlns:xct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
              Title="UserListView">
 
-    <ScrollView>
-        <Grid RowDefinitions="auto, auto, auto, auto"
+    <Grid RowDefinitions="*, auto">
+
+        <ScrollView Grid.Row="0">
+            <Grid RowDefinitions="auto, auto, auto, auto"
            ColumnDefinitions="*, *, *"
            ColumnSpacing="20"
            RowSpacing="20">
 
-            <!-- Title -->
-            <Label Grid.Row="0"
+                <!-- Title -->
+                <Label Grid.Row="0"
                 Grid.ColumnSpan="3"
                 Text="Users"
                 FontSize="Header"
                 Margin="0, 10, 0, 0"
                 HorizontalOptions="Center" />
 
-            <!-- Search Bar -->
-            <Border Grid.Row="1"
+                <!-- Search Bar -->
+                <Border Grid.Row="1"
                  Grid.Column="0"
                  Margin="30, 0, 0, 0">
 
-                <!--<SearchBar FontSize="Medium"
-                        Placeholder="Search..."
-                        Text="{Binding SearchText}"
-                        SearchCommand="{Binding SearchCommand}" />-->
+                    <SearchBar FontSize="Medium"
+                    Placeholder="Search..."
+                    Text="{Binding SearchText, Mode=TwoWay}">
 
-            </Border>
+                        <SearchBar.Behaviors>
+                            <xct:EventToCommandBehavior EventName="TextChanged"
+                                        Command="{Binding SearchUserCommand}"/>
+                        </SearchBar.Behaviors>
 
-            <!-- User List -->
-            <Border Grid.Row="2"
+                    </SearchBar>
+
+                </Border>
+
+                <!-- User List -->
+                <Border Grid.Row="2"
                  Grid.ColumnSpan="3"
                  Margin="30, 0, 30, 0">
 
-                <ListView HasUnevenRows="True"
+                    <ListView HasUnevenRows="True"
                        MinimumHeightRequest="485"
                        MaximumHeightRequest="485"
                        ItemsSource="{Binding Users}"
@@ -45,64 +53,68 @@
                        VerticalScrollBarVisibility="Never"
                        HorizontalScrollBarVisibility="Never">
 
-                    <ListView.Header>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="3*" />
-                                <ColumnDefinition Width="3*" />
-                                <ColumnDefinition Width="3*" />
-                            </Grid.ColumnDefinitions>
+                        <ListView.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="3*" />
+                                </Grid.ColumnDefinitions>
 
-                            <Label Grid.Column="0" Text="Id" FontSize="Medium" HorizontalOptions="Center" />
-                            <Label Grid.Column="1" Text="Name" FontSize="Medium" HorizontalOptions="Center" />
-                            <Label Grid.Column="2" Text="Email" FontSize="Medium" HorizontalOptions="Center" />
-                            <Label Grid.Column="3" Text="Mobile" FontSize="Medium" HorizontalOptions="Center" />
-                        </Grid>
-                    </ListView.Header>
+                                <Label Grid.Column="0" Text="Id" FontSize="Medium" HorizontalOptions="Center" />
+                                <Label Grid.Column="1" Text="Name" FontSize="Medium" HorizontalOptions="Center" />
+                                <Label Grid.Column="2" Text="Email" FontSize="Medium" HorizontalOptions="Center" />
+                                <Label Grid.Column="3" Text="Mobile" FontSize="Medium" HorizontalOptions="Center" />
+                            </Grid>
+                        </ListView.Header>
 
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="{x:Type model:User}">
-                            <ViewCell>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Type model:User}">
+                                <ViewCell>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
 
-                                    <Label Grid.Column="0" Text="{Binding Id}" FontSize="Medium" VerticalOptions="Center" />
-                                    <Label Grid.Column="1" Text="{Binding Name}" FontSize="Medium" VerticalOptions="Center" />
-                                    <Label Grid.Column="2" Text="{Binding Email}" FontSize="Medium" VerticalOptions="Center" />
-                                    <Label Grid.Column="3" Text="{Binding PhoneNumber}" FontSize="Medium" VerticalOptions="Center" />
-                                </Grid>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
+                                        <Label Grid.Column="0" Text="{Binding Id}" FontSize="Medium" VerticalOptions="Center" />
+                                        <Label Grid.Column="1" Text="{Binding Name}" FontSize="Medium" VerticalOptions="Center" />
+                                        <Label Grid.Column="2" Text="{Binding Email}" FontSize="Medium" VerticalOptions="Center" />
+                                        <Label Grid.Column="3" Text="{Binding PhoneNumber}" FontSize="Medium" VerticalOptions="Center" />
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
 
-                </ListView>
+                    </ListView>
 
-            </Border>
+                </Border>
+                </Grid>
+        </ScrollView>
 
-            <!-- Control Buttons -->
-            <Button Grid.Row="3"
-                 Grid.Column="0"
-                 Margin="20, 0, 0, 20"
+        <!-- Control Buttons -->
+        <Grid Grid.Row="1"
+              RowDefinitions="auto"
+              ColumnDefinitions="*, *, *"
+              ColumnSpacing="20"
+              RowSpacing="20"
+              Padding="20">
+
+            <Button Grid.Column="0"
                  Text="Add User"
                  Command="{Binding AddUserCommand}" />
-            <Button Grid.Row="3"
-                 Grid.Column="1"
-                 Margin="0, 0, 0, 20"
+            <Button Grid.Column="1"
                  Text="Remove User"
                  Command="{Binding RemoveUserCommand}" />
-            <Button Grid.Row="3"
-                 Grid.Column="2"
-                 Margin="0, 0, 20, 20"
+            <Button Grid.Column="2"
                  Text="Ban/Unban User"
-                 Command="{Binding BunUserCommand}" />  
+                 Command="{Binding BunUserCommand}" />
 
         </Grid>
-    </ScrollView>
+
+    </Grid>
 
 </ContentPage>

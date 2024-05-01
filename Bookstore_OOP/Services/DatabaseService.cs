@@ -16,6 +16,7 @@ namespace Bookstore_OOP.Services
     
         public DatabaseService()
         {
+            //_connectionString = "Host=10.0.2.2;Port=5432 ;Username=karina ;Password=password ;Database=bookstore";
             _connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
         }
 
