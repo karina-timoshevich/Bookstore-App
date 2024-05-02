@@ -38,6 +38,15 @@
         </Tab>
     </FlyoutItem>
 
+    <FlyoutItem Title="ORDERS">
+        <Tab>
+            <ShellContent
+         Title="ORDERS"
+         ContentTemplate="{DataTemplate view:UserOrders}"
+         Route="UserOrders" />
+        </Tab>
+    </FlyoutItem>
+
 
 
 </Shell>

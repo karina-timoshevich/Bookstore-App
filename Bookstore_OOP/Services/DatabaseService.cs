@@ -16,8 +16,8 @@ namespace Bookstore_OOP.Services
     
         public DatabaseService()
         {
-            _connectionString = "Host=10.0.2.2;Port=5432 ;Username=karina ;Password=password ;Database=bookstore";
-            //_connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
+           // _connectionString = "Host=10.0.2.2;Port=5432 ;Username=karina ;Password=password ;Database=bookstore";
+            _connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
         }
 
         public void CreateTable()
@@ -623,8 +623,6 @@ namespace Bookstore_OOP.Services
             return null;
         }
 
-
-
         public void SetCurrentUser(int userId)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
@@ -774,8 +772,6 @@ namespace Bookstore_OOP.Services
             }
         }
 
-
-
         public void AddBookToCart(int userId, int bookId)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
@@ -915,6 +911,8 @@ namespace Bookstore_OOP.Services
             return totalPrice;
         }
 
+        // Объявление события
+        public event Action OrderAdded;
         public void PlaceOrder(int userId)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
@@ -955,6 +953,46 @@ namespace Bookstore_OOP.Services
                     cmd.ExecuteNonQuery();
                 }
             }
+
+            // Вызов события после добавления заказа
+            OrderAdded?.Invoke();
+        }
+
+        public List<Order> GetOrdersByUserId(int userId)
+        {
+            List<Order> orders = new List<Order>();
+
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для получения всех заказов пользователя
+                    cmd.CommandText = "SELECT * FROM Orders WHERE UserId = @userId";
+                    cmd.Parameters.AddWithValue("userId", userId);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Order order = new Order
+                            {
+                                Id = (int)reader["Id"],
+                                UserId = (int)reader["UserId"],
+                                OrderDate = (DateTime)reader["OrderDate"], // Добавлено извлечение даты заказа
+                                Status = (string)reader["Status"]
+                            };
+
+                            orders.Add(order);
+                        }
+                    }
+                }
+            }
+
+            return orders;
         }
     }
 }
