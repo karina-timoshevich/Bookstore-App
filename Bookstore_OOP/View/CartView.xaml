@@ -58,7 +58,7 @@
                                             </Grid.ColumnDefinitions>
 
                                             <Label Grid.Column="0" Text="{Binding Book.Title}" FontSize="Medium" VerticalOptions="Center" />
-                                            <Label Grid.Column="1" Text="{Binding AuthorName}" FontSize="Medium" VerticalOptions="Center" />
+                                            <!--<Label Grid.Column="1" Text="{Binding AuthorName}" FontSize="Medium" VerticalOptions="Center" />-->
                                             <Label Grid.Column="2" Text="{Binding Book.Price}" FontSize="Medium" VerticalOptions="Center" />
                                             <Label Grid.Column="4" Text="{Binding Quantity}" FontSize="Medium" VerticalOptions="Center" />
 

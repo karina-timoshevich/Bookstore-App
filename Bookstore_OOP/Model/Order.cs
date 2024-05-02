@@ -17,6 +17,7 @@ namespace Bookstore_OOP.Model
         public DateTime OrderDate { get; set; }
         public decimal TotalPrice { get; set; }
         public List<OrderItem> Items { get; set; }
+        public string Status { get; set; }
 
         public Order()
         {

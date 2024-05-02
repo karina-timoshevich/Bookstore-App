@@ -101,7 +101,8 @@ namespace Bookstore_OOP.Services
                                 ID SERIAL PRIMARY KEY,
                                 UserID INTEGER REFERENCES Users(ID),
                                 OrderDate DATE,
-                                TotalPrice DECIMAL
+                                TotalPrice DECIMAL,
+                                Status VARCHAR(100)
                                 );";
                     command.ExecuteNonQuery();
                     Debug.WriteLine("Таблица 'Orders' успешно создана или уже существует.");
@@ -110,6 +111,7 @@ namespace Bookstore_OOP.Services
                     command.CommandText = @"CREATE TABLE IF NOT EXISTS OrderItems (
                                 ID SERIAL PRIMARY KEY,
                                 OrderID INTEGER REFERENCES Orders(ID),
+                                BookID INTEGER REFERENCES Books(ID),
                                 Quantity INTEGER
                                 );";
                     command.ExecuteNonQuery();
@@ -854,6 +856,105 @@ namespace Bookstore_OOP.Services
             }
         }
 
+        public decimal GetBookPrice(int bookId)
+        {
+            decimal bookPrice = 0;
 
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для получения цены книги
+                    cmd.CommandText = "SELECT Price FROM Books WHERE Id = @bookId";
+                    cmd.Parameters.AddWithValue("bookId", bookId);
+
+                    bookPrice = (decimal)cmd.ExecuteScalar();
+                }
+            }
+
+            return bookPrice;
+        }
+
+        public decimal GetTotalPrice(int userId)
+        {
+            decimal totalPrice = 0;
+
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для получения всех элементов корзины пользователя
+                    cmd.CommandText = "SELECT * FROM CartItems WHERE UserId = @userId";
+                    cmd.Parameters.AddWithValue("userId", userId);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int quantity = (int)reader["Quantity"];
+                            int bookId = (int)reader["BookId"];
+
+                            // Получение цены книги
+                            decimal bookPrice = GetBookPrice(bookId); // Метод для получения цены книги
+
+                            // Увеличение общей стоимости
+                            totalPrice += quantity * bookPrice;
+                        }
+                    }
+                }
+            }
+
+            return totalPrice;
+        }
+
+        public void PlaceOrder(int userId)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                // Создание нового заказа
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для создания нового заказа
+                    cmd.CommandText = "INSERT INTO Orders (UserId, OrderDate, TotalPrice, Status) VALUES (@userId, @orderDate, @totalPrice, @status) RETURNING Id";
+                    cmd.Parameters.AddWithValue("userId", userId);
+                    cmd.Parameters.AddWithValue("orderDate", DateTime.Now);
+                    cmd.Parameters.AddWithValue("totalPrice", GetTotalPrice(userId)); // Метод для получения общей стоимости всех элементов в корзине
+                    cmd.Parameters.AddWithValue("status", "В обработке");
+
+                    int orderId = (int)cmd.ExecuteScalar();
+
+                    // Создание новых элементов заказа для каждого элемента в корзине
+                    foreach (var cartItem in GetCartItems(userId)) // Метод для получения всех элементов в корзине
+                    {
+                        cmd.CommandText = "INSERT INTO OrderItems (OrderId, BookId, Quantity) VALUES (@orderId, @bookId, @quantity)";
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("orderId", orderId);
+                        cmd.Parameters.AddWithValue("bookId", cartItem.Book.Id);
+                        cmd.Parameters.AddWithValue("quantity", cartItem.Quantity);
+
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // Удаление всех элементов из корзины
+                    cmd.CommandText = "DELETE FROM CartItems WHERE UserId = @userId";
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("userId", userId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

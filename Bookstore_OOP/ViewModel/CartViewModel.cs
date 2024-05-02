@@ -52,7 +52,8 @@ namespace Bookstore_OOP.ViewModel
         [RelayCommand]
         private async Task PlaceOrder()
         {
-           
+            await Task.Run(() => dbService.PlaceOrder(dbService.GetCurrentUser()));
+            CartItems.Clear();
         }
 
         [RelayCommand]
