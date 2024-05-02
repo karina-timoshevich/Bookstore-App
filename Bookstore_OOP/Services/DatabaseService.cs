@@ -117,6 +117,13 @@ namespace Bookstore_OOP.Services
                     Debug.WriteLine("Таблица 'OrderItems' успешно создана или уже существует.");
 
 
+                    // Создание таблицы CurrentUsers
+                    command.CommandText = @"CREATE TABLE IF NOT EXISTS CurrentUsers (
+                        UserID INTEGER REFERENCES Users(ID)
+                        );";
+                    command.ExecuteNonQuery();
+                    Debug.WriteLine("Таблица 'CurrentUsers' успешно создана или уже существует.");
+
                 }
             }
         }
@@ -573,6 +580,157 @@ namespace Bookstore_OOP.Services
             }
 
             return null;
+        }
+
+
+
+        public void SetCurrentUser(int userId)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // Удаление всех записей из таблицы CurrentUsers
+                    cmd.CommandText = "DELETE FROM CurrentUsers";
+
+                    cmd.ExecuteNonQuery();
+
+                    // Добавление новой записи с идентификатором текущего пользователя
+                    cmd.CommandText = "INSERT INTO CurrentUsers (UserID) VALUES (@userId)";
+                    cmd.Parameters.AddWithValue("userId", userId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public int GetCurrentUser()
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // Получение идентификатора текущего пользователя
+                    cmd.CommandText = "SELECT UserID FROM CurrentUsers";
+
+                    var result = cmd.ExecuteScalar();
+                    if (result != null)
+                    {
+                        return (int)result;
+                    }
+                    else
+                    {
+                        // Текущий пользователь не установлен
+                        //return null;
+                        return 1;
+                    }
+                }
+            }
+        }
+
+        public int GetUserIdByEmail(string email)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для получения идентификатора пользователя по email
+                    cmd.CommandText = "SELECT ID FROM Users WHERE Email = @email";
+                    cmd.Parameters.AddWithValue("email", email);
+
+                    var result = cmd.ExecuteScalar();
+                    if (result != null)
+                    {
+                        return (int)result;
+                    }
+                    else
+                    {
+                        // Пользователь с таким email не найден
+                        // return null;
+                        return 1;
+                    }
+                }
+            }
+        }
+
+        public string GetUserNameById(int id)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для получения имени пользователя по ID
+                    cmd.CommandText = "SELECT Name FROM Users WHERE ID = @id";
+                    cmd.Parameters.AddWithValue("id", id);
+
+                    var result = cmd.ExecuteScalar();
+                    if (result != null)
+                    {
+                        // Возвращаем имя пользователя
+                        return result.ToString();
+                    }
+                    else
+                    {
+                        // Пользователь с таким ID не найден
+                        return null;
+                    }
+                }
+            }
+        }
+
+        public User GetUserById(int id)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для получения всех полей пользователя по ID
+                    cmd.CommandText = "SELECT * FROM Users WHERE ID = @id";
+                    cmd.Parameters.AddWithValue("id", id);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Создаем и возвращаем объект User
+                            return new User
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("ID")),
+                                Email = reader.GetString(reader.GetOrdinal("Email")),
+                                Password = reader.GetString(reader.GetOrdinal("Password")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                PhoneNumber = reader.GetString(reader.GetOrdinal("MobileNumber")),
+                                //Address = reader.GetString(reader.GetOrdinal("Address")),
+                            };
+                        }
+                        else
+                        {
+                            // Пользователь с таким ID не найден
+                            return null;
+                        }
+                    }
+                }
+            }
         }
     }
 }

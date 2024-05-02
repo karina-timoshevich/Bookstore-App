@@ -6,6 +6,17 @@
              xmlns:view="clr-namespace:Bookstore_OOP.View"
              Title="UserMainPage">
 
+    <StackLayout VerticalOptions="CenterAndExpand" 
+                 HorizontalOptions="CenterAndExpand">
+
+        <Label x:Name="WelcomeLabel" 
+               Text="Welcome, User!" 
+               FontSize="Large" 
+               HorizontalOptions="CenterAndExpand" 
+               VerticalOptions="CenterAndExpand" />
+
+    </StackLayout>
+
 </ContentPage>
     
     
