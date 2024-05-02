@@ -16,8 +16,8 @@ namespace Bookstore_OOP.Services
     
         public DatabaseService()
         {
-            //_connectionString = "Host=10.0.2.2;Port=5432 ;Username=karina ;Password=password ;Database=bookstore";
-            _connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
+            _connectionString = "Host=10.0.2.2;Port=5432 ;Username=karina ;Password=password ;Database=bookstore";
+            //_connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
         }
 
         public void CreateTable()
@@ -85,17 +85,16 @@ namespace Bookstore_OOP.Services
                                 );";
                     command.ExecuteNonQuery();
                     Debug.WriteLine("Таблица 'Books' успешно создана или уже существует.");
-
                     // Создание таблицы CartItems
                     command.CommandText = @"CREATE TABLE IF NOT EXISTS CartItems (
-                            ID SERIAL PRIMARY KEY,
-                            UserId INTEGER REFERENCES Users(ID),
-                            BookId INTEGER REFERENCES Books(ID),
-                            Quantity INTEGER
-                            );";
+                                ID SERIAL PRIMARY KEY,
+                                UserId INTEGER REFERENCES Users(ID),
+                                BookId INTEGER REFERENCES Books(ID),
+                                Quantity INTEGER,
+                                UNIQUE (UserId, BookId)
+                                );";
                     command.ExecuteNonQuery();
                     Debug.WriteLine("Таблица 'CartItems' успешно создана или уже существует.");
-
 
                     // Создание таблицы Orders
                     command.CommandText = @"CREATE TABLE IF NOT EXISTS Orders (
@@ -356,6 +355,46 @@ namespace Bookstore_OOP.Services
             }
 
             return books;
+        }
+
+        public List<CartItemDisplay> GetCartItems(int userId)
+        {
+            var cartItems = new List<CartItemDisplay>();
+
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для получения всех элементов корзины для данного пользователя
+                    cmd.CommandText = "SELECT * FROM CartItems WHERE UserId = @userId";
+                    cmd.Parameters.AddWithValue("userId", userId);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var bookId = (int)reader["BookId"];
+                            var quantity = (int)reader["Quantity"];
+
+                            var book = GetBookById(bookId);
+                            var authorName = GetAuthorNameById(book.AuthorID);
+
+                            cartItems.Add(new CartItemDisplay
+                            {
+                                Book = book,
+                                AuthorName = authorName,
+                                Quantity = quantity
+                            });
+                        }
+                    }
+                }
+            }
+
+            return cartItems;
         }
 
         public List<Author> GetAuthors()
@@ -732,5 +771,89 @@ namespace Bookstore_OOP.Services
                 }
             }
         }
+
+
+
+        public void AddBookToCart(int userId, int bookId)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для добавления книги в корзину
+                    cmd.CommandText = "INSERT INTO CartItems (UserId, BookId, Quantity) VALUES (@userId, @bookId, 1) ON CONFLICT (UserId, BookId) DO NOTHING";
+                    cmd.Parameters.AddWithValue("userId", userId);
+                    cmd.Parameters.AddWithValue("bookId", bookId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void RemoveItem(int bookId, int userId)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для удаления книги из корзины
+                    cmd.CommandText = "DELETE FROM CartItems WHERE BookId = @bookId AND UserId = @userId";
+                    cmd.Parameters.AddWithValue("bookId", bookId);
+                    cmd.Parameters.AddWithValue("userId", userId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void IncreaseQuantity(int bookId, int userId)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для увеличения количества книги в корзине
+                    cmd.CommandText = "UPDATE CartItems SET Quantity = Quantity + 1 WHERE BookId = @bookId AND UserId = @userId";
+                    cmd.Parameters.AddWithValue("bookId", bookId);
+                    cmd.Parameters.AddWithValue("userId", userId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DecreaseQuantity(int bookId, int userId)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для уменьшения количества книги в корзине
+                    cmd.CommandText = "UPDATE CartItems SET Quantity = Quantity - 1 WHERE BookId = @bookId AND UserId = @userId AND Quantity > 0";
+                    cmd.Parameters.AddWithValue("bookId", bookId);
+                    cmd.Parameters.AddWithValue("userId", userId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
     }
 }

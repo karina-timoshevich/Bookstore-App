@@ -5,61 +5,79 @@
              xmlns:model="clr-namespace:Bookstore_OOP.Model"
              Title="CartView">
 
+    <StackLayout>
+        <Border Grid.Row="2"
+                Grid.ColumnSpan="3"
+                Margin="30, 0, 30, 0">
 
-    <!-- Book List -->
-    <Border Grid.Row="2"
-Grid.ColumnSpan="3"
-Margin="30, 0, 30, 0">
+            <ListView HasUnevenRows="True"
+                      MinimumHeightRequest="485"
+                      MaximumHeightRequest="485"
+                      ItemsSource="{Binding CartItems}"
+                      SelectedItem="{Binding SelectedCartItem}"
+                      BackgroundColor="Transparent"
+                      VerticalScrollBarVisibility="Never"
+                      HorizontalScrollBarVisibility="Never">
 
-        <ListView HasUnevenRows="True"
-      MinimumHeightRequest="485"
-      MaximumHeightRequest="485"
-      ItemsSource="{Binding Books}"
-      SelectedItem="{Binding SelectedBook}"
-      BackgroundColor="Transparent"
-      VerticalScrollBarVisibility="Never"
-      HorizontalScrollBarVisibility="Never">
+                <ListView.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ListView.Header>
 
-            <ListView.Header>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="3*" />
-                    </Grid.ColumnDefinitions>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type model:CartItemDisplay}">
+                        <ViewCell>
+                            <SwipeView>
+                                <SwipeView.LeftItems>
+                                    <SwipeItems Mode="Execute">
+                                        <SwipeItem Text="Удалить" 
+                           Command="{Binding Path=BindingContext.RemoveItemCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
+                           CommandParameter="{Binding}"
+                           BackgroundColor="Red" />
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
 
-                </Grid>
-            </ListView.Header>
+                                <SwipeView.Content>
+                                    <Frame BorderColor="BlueViolet" CornerRadius="5">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
 
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="{x:Type model:BookDisplay}">
+                                            <Label Grid.Column="0" Text="{Binding Book.Title}" FontSize="Medium" VerticalOptions="Center" />
+                                            <Label Grid.Column="1" Text="{Binding AuthorName}" FontSize="Medium" VerticalOptions="Center" />
+                                            <Label Grid.Column="2" Text="{Binding Book.Price}" FontSize="Medium" VerticalOptions="Center" />
+                                            <Label Grid.Column="4" Text="{Binding Quantity}" FontSize="Medium" VerticalOptions="Center" />
 
-                    <ViewCell>
-                        <Frame BorderColor="BlueViolet" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
+                                            <Button Grid.Column="3" TextColor="White" Text="+" Command="{Binding Path=BindingContext.IncreaseQuantityCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding}" />
+                                            <Button Grid.Column="5" TextColor="White" Text="-" Command="{Binding Path=BindingContext.DecreaseQuantityCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding}" />
+                                        </Grid>
+                                    </Frame>
+                                </SwipeView.Content>
+                            </SwipeView>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
 
-                                <Label Grid.Column="0" Text="{Binding Book.Title}" FontSize="Medium" VerticalOptions="Center" />
-                                <Label Grid.Column="1" Text="{Binding AuthorName}" FontSize="Medium" VerticalOptions="Center" />
-                                <Label Grid.Column="2" Text="{Binding Book.Price}" FontSize="Medium" VerticalOptions="Center" />
-                                <!--<Button Grid.Column="3" TextColor="Gold" Text="ADD TO CART" Command="{Binding Source={x:Reference DirectoryViewModel}, Path=AddToCartCommand}" CommandParameter="{Binding AddToCart}" />-->
+            </ListView>
 
-                            </Grid>
-                        </Frame>
+        </Border>
 
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-
-        </ListView>
-
-    </Border>
-
+        <Button Text="Оформить заказ" Command="{Binding PlaceOrderCommand}" HorizontalOptions="Center" VerticalOptions="EndAndExpand" />
+        <!--<Label Text="{Binding TotalCost}" HorizontalOptions="Center" VerticalOptions="EndAndExpand" />-->
+    </StackLayout>
 
 </ContentPage>

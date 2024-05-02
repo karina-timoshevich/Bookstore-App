@@ -13,6 +13,9 @@ public partial class DirectoryViewModel : ObservableObject
 
     [ObservableProperty]
     private ObservableCollection<BookDisplay> _books;
+    //add selected book
+    [ObservableProperty]
+    private BookDisplay _selectedBook;
 
     DatabaseService dbService = new DatabaseService();
     public DirectoryViewModel()
@@ -22,11 +25,11 @@ public partial class DirectoryViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task AddToCartAsync(BookDisplay book)
+    private async Task AddToCartAsync()
     {
-        if (book != null)
+        if (_selectedBook != null)
         {
-            //   await Task.Run(() => dbService.AddBookToCart(userId, book.Book.Id, quantity));
+               await Task.Run(() => dbService.AddBookToCart(dbService.GetCurrentUser(), _selectedBook.Book.Id));
         }
 
     }

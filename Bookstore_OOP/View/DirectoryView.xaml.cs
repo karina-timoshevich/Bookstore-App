@@ -6,6 +6,7 @@ public partial class DirectoryView : ContentPage
     public DirectoryView()
     {
         InitializeComponent();
+        BindingContext = new DirectoryViewModel();
     }
 
     protected override void OnNavigatedTo(NavigatedToEventArgs args)
