@@ -994,5 +994,62 @@ namespace Bookstore_OOP.Services
 
             return orders;
         }
+
+        public List<Order> GetAllOrders()
+        {
+            var orders = new List<Order>();
+
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL query to get all orders
+                    cmd.CommandText = "SELECT * FROM Orders";
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var order = new Order
+                            {
+                                Id = (int)reader["ID"],
+                                UserId = (int)reader["UserID"],
+                                OrderDate = (DateTime)reader["OrderDate"],
+                                TotalPrice = (decimal)reader["TotalPrice"],
+                                Status = (string)reader["Status"]
+                            };
+
+                            orders.Add(order);
+                        }
+                    }
+                }
+            }
+
+            return orders;
+        }
+
+        public void UpdateOrderStatus(int orderId, string newStatus)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL query to update the status of an order
+                    cmd.CommandText = "UPDATE Orders SET Status = @newStatus WHERE ID = @orderId";
+                    cmd.Parameters.AddWithValue("newStatus", newStatus);
+                    cmd.Parameters.AddWithValue("orderId", orderId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

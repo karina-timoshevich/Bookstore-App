@@ -26,7 +26,7 @@
         </Tab>
     </FlyoutItem>
 
-    <FlyoutItem Title="UserList">
+    <FlyoutItem Title="User List">
         <Tab>
             <ShellContent
            Title="UserList"
@@ -35,7 +35,7 @@
         </Tab>
     </FlyoutItem>
 
-    <FlyoutItem Title="BookList">
+    <FlyoutItem Title="Book List">
         <Tab>
             <ShellContent
            Title="BookList"
@@ -43,6 +43,15 @@
            Route="BookListView" />
         </Tab>
     </FlyoutItem>
-    
+
+    <FlyoutItem Title="Users Orders">
+        <Tab>
+            <ShellContent
+        Title="Users Orders"
+        ContentTemplate="{DataTemplate view:AdminOrders}"
+        Route="AdminOrders" />
+        </Tab>
+    </FlyoutItem>
+
 
 </Shell>

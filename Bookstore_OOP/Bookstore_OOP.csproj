@@ -75,6 +75,9 @@
 	  <MauiXaml Update="View\AdminMainPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="View\AdminOrders.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="View\BookListView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

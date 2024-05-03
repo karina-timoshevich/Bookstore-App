@@ -2,6 +2,8 @@
 using Bookstore_OOP.Services;
 using Bookstore_OOP.View;
 using Bookstore_OOP.ViewModel;
+using CommunityToolkit.Maui;
+
 namespace Bookstore_OOP
 {
     public static class MauiProgram
@@ -11,6 +13,7 @@ namespace Bookstore_OOP
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
