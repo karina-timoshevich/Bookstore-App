@@ -21,7 +21,7 @@ namespace Bookstore_OOP.ViewModel
             _dbService.OrderAdded += LoadOrders;
         }
 
-        private void LoadOrders()
+        public void LoadOrders()
         {
             var orders = _dbService.GetOrdersByUserId(_dbService.GetCurrentUser());
             Orders = new ObservableCollection<Order>(orders);
