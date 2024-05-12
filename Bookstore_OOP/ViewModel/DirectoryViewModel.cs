@@ -25,7 +25,7 @@ public partial class DirectoryViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task AddToCartAsync()
+    public async Task AddToCartAsync()
     {
         if (_selectedBook != null)
         {
@@ -33,4 +33,6 @@ public partial class DirectoryViewModel : ObservableObject
         }
 
     }
+
+
 }
