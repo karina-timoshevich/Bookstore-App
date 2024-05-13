@@ -101,15 +101,15 @@ namespace Bookstore_OOP.ViewModel
             }
         }
 
-        [RelayCommand]
-        private async Task SelectCoverAsync()
-        {
-            var result = await FilePicker.PickAsync();
-            if (result != null)
-            {
-                Book.CoverPath = result.FullPath;
-            }
-        }
+        //[RelayCommand]
+        //private async Task SelectCoverAsync()
+        //{
+        //    var result = await FilePicker.PickAsync();
+        //    if (result != null)
+        //    {
+        //        Book.CoverPath = result.FullPath;
+        //    }
+        //}
 
 
     }

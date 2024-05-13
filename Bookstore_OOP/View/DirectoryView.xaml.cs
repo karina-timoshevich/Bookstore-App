@@ -11,14 +11,12 @@ public partial class DirectoryView : ContentPage
     {
         InitializeComponent();
         _dbService.InitDB();
-        BindingContext = new DirectoryViewModel();
+        _directoryViewModel = new DirectoryViewModel();
+        BindingContext = _directoryViewModel;
     }
 
     protected override void OnNavigatedTo(NavigatedToEventArgs args)
     {
-        _directoryViewModel = new();
-        BindingContext = _directoryViewModel;
-
         base.OnNavigatedTo(args);
     }
 

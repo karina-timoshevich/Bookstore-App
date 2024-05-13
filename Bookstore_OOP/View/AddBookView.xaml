@@ -61,11 +61,11 @@
                            Text="{Binding Book.Price}" />
                 </Border>
                 <Border>
-                    <Entry Placeholder="Cover Path"
+                    <Entry Placeholder="Cover Image URL"
                            Text="{Binding Book.CoverPath}" />
                 </Border>
-                <Button Text="Select Cover"
-                        Command="{Binding SelectCoverCommand}" />
+                <!--<Button Text="Select Cover"
+                        Command="{Binding SelectCoverCommand}" />-->
 
             </VerticalStackLayout>
 

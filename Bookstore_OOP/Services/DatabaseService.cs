@@ -16,8 +16,8 @@ namespace Bookstore_OOP.Services
     
         public DatabaseService()
         {
-           // _connectionString = "Host=10.0.2.2;Port=5432 ;Username=karina ;Password=password ;Database=bookstore";
-            _connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
+            _connectionString = "Host=10.0.2.2;Port=5432 ;Username=karina ;Password=password ;Database=bookstore";
+           // _connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
         }
 
         public void CreateTable()
@@ -343,7 +343,9 @@ namespace Bookstore_OOP.Services
                                 Publisher = (string)reader["Publisher"],
                                 Year = (int)reader["Year"],
                                 Genre = (string)reader["Genre"],
-                                Price = (decimal)reader["Price"]
+                                Price = (decimal)reader["Price"],
+                                CoverPath = (string)reader["CoverPath"]
+
                             };
 
                             var authorName = GetAuthorNameById(book.AuthorID);
@@ -464,6 +466,15 @@ namespace Bookstore_OOP.Services
                 using (var cmd = new NpgsqlCommand())
                 {
                     cmd.Connection = connection;
+
+                    // SQL-запрос для удаления связанных записей в таблице CartItems
+                    cmd.CommandText = "DELETE FROM CartItems WHERE BookID = @id";
+                    cmd.Parameters.AddWithValue("id", id);
+
+                    cmd.ExecuteNonQuery();
+
+                    // Очистка параметров для следующего запроса
+                    cmd.Parameters.Clear();
 
                     // SQL-запрос для удаления книги по ID
                     cmd.CommandText = "DELETE FROM Books WHERE ID = @id";

@@ -1,15 +1,32 @@
-namespace Bookstore_OOP.View;
 using Bookstore_OOP.Model;
+using Bookstore_OOP.ViewModel;
+using Bookstore_OOP.Services;
 
-public partial class BookDetailsPage : ContentPage
+
+namespace Bookstore_OOP.View
 {
-    private BookDisplay _book;
-
-    public BookDetailsPage(BookDisplay book)
+    public partial class BookDetailsPage : ContentPage
     {
-        InitializeComponent();
-        _book = book;
+        private BookDetailsViewModel viewModel;
+        private DatabaseService _dbService = new DatabaseService();
+        public BookDetailsPage(BookDisplay book)
+        {
+            InitializeComponent();
+            _dbService.InitDB();
+            viewModel = new BookDetailsViewModel(book);
+            BindingContext = viewModel;
+        }
 
-        // Здесь вы можете использовать _book для инициализации свойств страницы
+        private void OnAddToCartClicked(object sender, EventArgs e)
+        {
+            var button = (Button)sender;
+            var selectedBook = (BookDisplay)button.CommandParameter;
+            if (selectedBook != null)
+            {
+                _dbService.AddBookToCart(_dbService.GetCurrentUser(), selectedBook.Book.Id);
+            }
+        }
     }
+
+   
 }

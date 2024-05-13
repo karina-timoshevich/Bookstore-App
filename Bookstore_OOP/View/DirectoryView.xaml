@@ -51,20 +51,22 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <Label Grid.Column="0" Text="{Binding Book.Title}" FontSize="Medium" VerticalOptions="Center" />
-                                <!--<Label Grid.Column="1" Text="{Binding AuthorName}" FontSize="Medium" VerticalOptions="Center" />-->
-                                <Label Grid.Column="2" Text="{Binding Book.Price}" FontSize="Medium" VerticalOptions="Center" />
-                                <Button Grid.Column="3" TextColor="White" Text="ADD TO CART" 
-                                        Command="{Binding Path=BindingContext.AddToCartCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
-                                        CommandParameter="{Binding}"
-                                        Clicked="OnAddToCartClicked" />
+                                <!-- Book Cover -->
+                                <Image Grid.Column="0" Source="{Binding Book.CoverPath}" Aspect="AspectFill" />
+
+                                <Label Grid.Column="1" Text="{Binding Book.Title}" FontSize="Medium" VerticalOptions="Center" />
+                                <!--<Label Grid.Column="2" Text="{Binding AuthorName}" FontSize="Medium" VerticalOptions="Center" />-->
+                                <Label Grid.Column="3" Text="{Binding Book.Price}" FontSize="Medium" VerticalOptions="Center" />
+                                <Button Grid.Column="4" TextColor="White" Text="ADD TO CART" 
+                            Command="{Binding Path=BindingContext.AddToCartCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
+                            CommandParameter="{Binding}"
+                            Clicked="OnAddToCartClicked" />
                             </Grid>
                         </Frame>
 
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
-
         </ListView>
     </Grid>
 
