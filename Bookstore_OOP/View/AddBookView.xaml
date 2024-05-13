@@ -60,6 +60,12 @@
                     <Entry Placeholder="Price"
                            Text="{Binding Book.Price}" />
                 </Border>
+                <Border>
+                    <Entry Placeholder="Cover Path"
+                           Text="{Binding Book.CoverPath}" />
+                </Border>
+                <Button Text="Select Cover"
+                        Command="{Binding SelectCoverCommand}" />
 
             </VerticalStackLayout>
 

@@ -81,7 +81,8 @@ namespace Bookstore_OOP.Services
                                 Publisher VARCHAR(100),
                                 Year INTEGER,
                                 Genre VARCHAR(100),
-                                Price DECIMAL
+                                Price DECIMAL,
+                                CoverPath VARCHAR(255)
                                 );";
                     command.ExecuteNonQuery();
                     Debug.WriteLine("Таблица 'Books' успешно создана или уже существует.");
@@ -162,13 +163,14 @@ namespace Bookstore_OOP.Services
                     cmd.Connection = connection;
 
                     // SQL-запрос для добавления новой книги
-                    cmd.CommandText = "INSERT INTO Books (Title, AuthorID, Publisher, Year, Genre, Price) VALUES (@title, @authorId, @publisher, @year, @genre, @price)";
+                    cmd.CommandText = "INSERT INTO Books (Title, AuthorID, Publisher, Year, Genre, Price, CoverPath) VALUES (@title, @authorId, @publisher, @year, @genre, @price, @coverPath)";
                     cmd.Parameters.AddWithValue("title", book.Title);
                     cmd.Parameters.AddWithValue("authorId", book.AuthorID);
                     cmd.Parameters.AddWithValue("publisher", book.Publisher);
                     cmd.Parameters.AddWithValue("year", book.Year);
                     cmd.Parameters.AddWithValue("genre", book.Genre);
                     cmd.Parameters.AddWithValue("price", book.Price);
+                    cmd.Parameters.AddWithValue("coverPath", book.CoverPath);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -613,7 +615,9 @@ namespace Bookstore_OOP.Services
                                 Publisher = (string)reader["Publisher"],
                                 Year = (int)reader["Year"],
                                 Genre = (string)reader["Genre"],
-                                Price = (decimal)reader["Price"]
+                                Price = (decimal)reader["Price"],
+
+                                CoverPath = (string)reader["CoverPath"] // Add this line
                             };
                         }
                     }

@@ -19,5 +19,8 @@ namespace Bookstore_OOP.Model
             public int Year { get; set; }
             public string Genre { get; set; }
             public decimal Price { get; set; }
+
+
+            public string CoverPath { get; set; }
         }
 }
