@@ -3,38 +3,40 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Bookstore_OOP.View.DirectoryView"
              xmlns:model="clr-namespace:Bookstore_OOP.Model"
+             xmlns:xct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
              Title="Shop">
 
-    <!-- Book List -->
-    <Border Grid.Row="2"
-  Grid.ColumnSpan="3"
-  Margin="30, 0, 30, 0">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <ListView HasUnevenRows="True"
-        MinimumHeightRequest="485"
-        MaximumHeightRequest="485"
-        ItemsSource="{Binding Books}"
-        SelectedItem="{Binding SelectedBook}"
-        BackgroundColor="Transparent"
-        VerticalScrollBarVisibility="Never"
-        HorizontalScrollBarVisibility="Never"
-        ItemSelected="OnItemSelected">
+        <!-- Search Bar -->
+        <SearchBar Grid.Row="0"
+                   FontSize="Medium"
+                   Placeholder="Search..."
+                   Text="{Binding SearchText, Mode=TwoWay}"
+                   HeightRequest="50"
+                   VerticalOptions="StartAndExpand">
 
-            <ListView.Header>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="3*" />
-                    </Grid.ColumnDefinitions>
+            <SearchBar.Behaviors>
+                <xct:EventToCommandBehavior EventName="TextChanged"
+                                             Command="{Binding SearchBookCommand}"/>
+            </SearchBar.Behaviors>
 
+        </SearchBar>
 
-                    <!--<Label Grid.Column="0" Text="Title" FontSize="Medium" HorizontalOptions="Center" />
-                    <Label Grid.Column="1" Text="AuthorID" FontSize="Medium" HorizontalOptions="Center" />
-                    <Label Grid.Column="2" Text="Price" FontSize="Medium" HorizontalOptions="Center" />-->
-                </Grid>
-            </ListView.Header>
+        <!-- Book List -->
+        <ListView Grid.Row="1"
+                  HasUnevenRows="True"
+                  ItemsSource="{Binding Books}"
+                  SelectedItem="{Binding SelectedBook}"
+                  BackgroundColor="Transparent"
+                  VerticalScrollBarVisibility="Never"
+                  HorizontalScrollBarVisibility="Never"
+                  ItemSelected="OnItemSelected"
+                  Header="{x:Null}">
 
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type model:BookDisplay}">
@@ -50,12 +52,12 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Label Grid.Column="0" Text="{Binding Book.Title}" FontSize="Medium" VerticalOptions="Center" />
-                                <Label Grid.Column="1" Text="{Binding AuthorName}" FontSize="Medium" VerticalOptions="Center" />
+                                <!--<Label Grid.Column="1" Text="{Binding AuthorName}" FontSize="Medium" VerticalOptions="Center" />-->
                                 <Label Grid.Column="2" Text="{Binding Book.Price}" FontSize="Medium" VerticalOptions="Center" />
                                 <Button Grid.Column="3" TextColor="White" Text="ADD TO CART" 
-                                Command="{Binding Path=BindingContext.AddToCartCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
-                                CommandParameter="{Binding}"
-                                Clicked="OnAddToCartClicked" />     
+                                        Command="{Binding Path=BindingContext.AddToCartCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
+                                        CommandParameter="{Binding}"
+                                        Clicked="OnAddToCartClicked" />
                             </Grid>
                         </Frame>
 
@@ -64,7 +66,6 @@
             </ListView.ItemTemplate>
 
         </ListView>
-
-    </Border>
+    </Grid>
 
 </ContentPage>

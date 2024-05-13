@@ -33,6 +33,20 @@ public partial class DirectoryViewModel : ObservableObject
         }
 
     }
+    [ObservableProperty]
+    private string _searchText;
 
-
+    [RelayCommand]
+    private void SearchBook()
+    {
+        if (string.IsNullOrWhiteSpace(SearchText))
+        {
+            Books = new ObservableCollection<BookDisplay>(dbService.GetBooks());
+        }
+        else
+        {
+            Books = new ObservableCollection<BookDisplay>(dbService.GetBooks().Where(book => book.Book.Title.Contains(SearchText)));
+         
+        }
+    }
 }
