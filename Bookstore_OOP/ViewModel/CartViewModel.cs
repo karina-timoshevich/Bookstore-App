@@ -16,15 +16,25 @@ namespace Bookstore_OOP.ViewModel
         DatabaseService dbService = new DatabaseService();
         [ObservableProperty]
         private CartItemDisplay _selectedCartItem;
-
+        [ObservableProperty]
+        private decimal _totalPrice;
 
         public CartViewModel()
         {
             dbService.InitDB();
             CartItems = new ObservableCollection<CartItemDisplay>(dbService.GetCartItems(dbService.GetCurrentUser()));
+            TotalPrice = GetTotalPrice();
         }
 
-      
+        public decimal GetTotalPrice()
+        {
+            return dbService.GetTotalPrice(dbService.GetCurrentUser());
+        }
+        private async Task UpdateCartAndTotalPrice()
+        {
+            CartItems = new ObservableCollection<CartItemDisplay>(dbService.GetCartItems(dbService.GetCurrentUser()));
+            TotalPrice = GetTotalPrice();
+        }
         [RelayCommand]
         private async Task IncreaseQuantity()
         {
@@ -33,7 +43,7 @@ namespace Bookstore_OOP.ViewModel
                 await Task.Run(() => dbService.IncreaseQuantity(_selectedCartItem.Book.Id, dbService.GetCurrentUser()));
                 //_selectedCartItem.Quantity++;
                 CartItems = new ObservableCollection<CartItemDisplay>(dbService.GetCartItems(dbService.GetCurrentUser()));
-
+                await UpdateCartAndTotalPrice();
             }
 
         }
@@ -45,6 +55,7 @@ namespace Bookstore_OOP.ViewModel
                 await Task.Run(() => dbService.DecreaseQuantity(_selectedCartItem.Book.Id, dbService.GetCurrentUser()));
                 // _selectedCartItem.Quantity--;
                 CartItems = new ObservableCollection<CartItemDisplay>(dbService.GetCartItems(dbService.GetCurrentUser()));
+                await UpdateCartAndTotalPrice();
             }
 
         }
@@ -54,6 +65,7 @@ namespace Bookstore_OOP.ViewModel
         {
             await Task.Run(() => dbService.PlaceOrder(dbService.GetCurrentUser()));
             CartItems.Clear();
+            TotalPrice = GetTotalPrice();
         }
 
         [RelayCommand]
@@ -64,6 +76,7 @@ namespace Bookstore_OOP.ViewModel
                 await Task.Run(() => dbService.RemoveItem(_selectedCartItem.Book.Id, dbService.GetCurrentUser()));
                 //CartItems.Remove(_selectedCartItem);
                 CartItems = new ObservableCollection<CartItemDisplay>(dbService.GetCartItems(dbService.GetCurrentUser()));
+                await UpdateCartAndTotalPrice();
             }
         }
     }

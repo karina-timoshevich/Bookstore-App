@@ -37,16 +37,19 @@ public partial class DirectoryViewModel : ObservableObject
     private string _searchText;
 
     [RelayCommand]
-    private void SearchBook()
+    private async Task SearchBook()
     {
         if (string.IsNullOrWhiteSpace(SearchText))
         {
-            Books = new ObservableCollection<BookDisplay>(dbService.GetBooks());
+            Books = new ObservableCollection<BookDisplay>(await dbService.GetBooksAsync());
         }
         else
         {
-            Books = new ObservableCollection<BookDisplay>(dbService.GetBooks().Where(book => book.Book.Title.Contains(SearchText)));
-         
+            var books = await dbService.GetBooksAsync();
+            if (books != null)
+            {
+                Books = new ObservableCollection<BookDisplay>(books.Where(book => book.Book.Title.Contains(SearchText)));
+            }
         }
     }
 }

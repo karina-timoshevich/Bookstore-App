@@ -75,7 +75,16 @@
             </ListView>
 
         </Border>
-
+        <Entry Placeholder="Введите промокод" Text="{Binding PromoCode}" HorizontalOptions="Center" />
+        <Label HorizontalOptions="Center" VerticalOptions="EndAndExpand">
+            <Label.FormattedText>
+                <FormattedString>
+                    <Span Text="Общая стоимость заказа: " />
+                    <Span Text="{Binding TotalPrice}" />
+                    <Span Text=" руб." />
+                </FormattedString>
+            </Label.FormattedText>
+        </Label>
         <Button Text="Оформить заказ" Command="{Binding PlaceOrderCommand}" HorizontalOptions="Center" VerticalOptions="EndAndExpand" />
         <!--<Label Text="{Binding TotalCost}" HorizontalOptions="Center" VerticalOptions="EndAndExpand" />-->
     </StackLayout>
