@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Npgsql;
 using Bookstore_OOP.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -41,6 +42,26 @@ namespace Bookstore_OOP.ViewModel
             // Debug.WriteLine("COUNT", Authors.Count);
         }
 
+        private string _fullName;
+        public string FullName
+        {
+            get { return _fullName; }
+            set
+            {
+                _fullName = value;
+                OnPropertyChanged(nameof(FullName));
+            }
+        }
+        private bool _isAuthorListVisible;
+        public bool IsAuthorListVisible
+        {
+            get { return _isAuthorListVisible; }
+            set
+            {
+                _isAuthorListVisible = value;
+                OnPropertyChanged(nameof(IsAuthorListVisible));
+            }
+        }
 
         private static bool IsAnyNullOrEmpty(object book)
         {
@@ -79,8 +100,6 @@ namespace Bookstore_OOP.ViewModel
             if (IsAnyNullOrEmpty(Book))
             {
                 Book = new();
-
-                // Debug.WriteLine("Book", Book.AuthorID.ToString());
                 await Shell.Current.DisplayAlert("There is an empty field", "Please fill it out and try again.", "Ok");
             }
             else if (IsBookExist())
@@ -90,14 +109,65 @@ namespace Bookstore_OOP.ViewModel
             }
             else
             {
-                //await DatabaseService<User>.AddColumnAsync(User);
-                // Debug.WriteLine("Book", Book.AuthorID);
-                // Debug.WriteLine("Book", Book.Title);
+                // Проверяем, существует ли автор в базе данных
+                var author = _dbService.GetAuthorByName(FullName);
+                if (author == null)
+                {
+                    // Если автора нет, добавляем нового автора в базу данных
+                    var newAuthor = new Author { FullName = this.FullName };
+                    _dbService.AddAuthor(newAuthor);
+                    Book.AuthorID = newAuthor.Id;
+                }
+                else
+                {
+                    Book.AuthorID = author.Id;
+                }
 
                 _dbService.AddBook(Book);
                 await Shell.Current.DisplayAlert("Book added successfully", "Press Ok and return to the book list", "Ok");
 
                 BackCommand.Execute(null);
+            }
+        }
+
+        public async Task AddAuthor(Author author)
+        {
+            // Проверяем, существует ли автор в базе данных
+            var existingAuthor = _dbService.GetAuthorByName(author.FullName);
+            if (existingAuthor == null)
+            {
+                // Если автора нет, добавляем его в базу данных
+                _dbService.AddAuthor(author);
+            }
+        }
+
+        public async Task FetchAuthors(string input)
+        {
+            string _connectionString;
+            //_connectionString = "Host=10.0.2.2;Port=5432 ;Username=karina ;Password=password ;Database=bookstore";
+            _connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                // Получаем авторов, которые соответствуют введенной строке
+                using (var cmd = new NpgsqlCommand("SELECT * FROM Authors WHERE FullName LIKE @fullname", connection))
+                {
+                    cmd.Parameters.AddWithValue("fullname", $"%{input}%");
+
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        Authors.Clear();
+                        while (await reader.ReadAsync())
+                        {
+                            Authors.Add(new Author
+                            {
+                                Id = reader.GetInt32(0),
+                                FullName = reader.GetString(1)
+                            });
+                        }
+                    }
+                }
             }
         }
 

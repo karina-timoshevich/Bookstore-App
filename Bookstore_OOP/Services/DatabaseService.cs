@@ -6,6 +6,8 @@ using Bookstore_OOP.Model;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bookstore_OOP.ViewModel;
+
 
 namespace Bookstore_OOP.Services
 {
@@ -16,8 +18,8 @@ namespace Bookstore_OOP.Services
     
         public DatabaseService()
         {
-            _connectionString = "Host=10.0.2.2;Port=5432 ;Username=karina ;Password=password ;Database=bookstore";
-           // _connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
+            //_connectionString = "Host=10.0.2.2;Port=5432 ;Username=karina ;Password=password ;Database=bookstore";
+            _connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
         }
 
         public void CreateTable()
@@ -1063,6 +1065,56 @@ namespace Bookstore_OOP.Services
                     cmd.Parameters.AddWithValue("orderId", orderId);
 
                     cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public Author GetAuthorByName(string name)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для получения автора по имени
+                    cmd.CommandText = "SELECT * FROM Authors WHERE FullName = @fullname";
+                    cmd.Parameters.AddWithValue("fullname", name);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Author
+                            {
+                                Id = reader.GetInt32(0),
+                                FullName = reader.GetString(1)
+                            };
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public void AddAuthor(Author author)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для добавления нового автора
+                    cmd.CommandText = "INSERT INTO Authors (FullName) VALUES (@fullname) RETURNING Id";
+                    cmd.Parameters.AddWithValue("fullname", author.FullName);
+
+                    author.Id = (int)cmd.ExecuteScalar();
                 }
             }
         }

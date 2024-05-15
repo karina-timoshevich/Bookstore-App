@@ -39,11 +39,21 @@
                            Text="{Binding Book.Title}" />
                 </Border>
                 <Border>
-                    <Picker Title="Author"
-                            ItemsSource="{Binding Authors}"
-                            SelectedItem="{Binding SelectedAuthor}" 
-                            ItemDisplayBinding="{Binding FullName}"/>
+                    <Entry x:Name="authorEntry"
+                           Placeholder="Author"
+                           Text="{Binding FullName}"
+                           TextChanged="OnAuthorTextChanged"/>
                 </Border>
+                <ListView x:Name="authorListView"
+          ItemsSource="{Binding Authors}"
+          IsVisible="{Binding IsAuthorListVisible}"
+          ItemSelected="OnAuthorSelected">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextCell Text="{Binding FullName}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
                 <Border>
                     <Entry Placeholder="Publisher"
                            Text="{Binding Book.Publisher}" />
