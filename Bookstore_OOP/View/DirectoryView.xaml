@@ -59,7 +59,7 @@
                             <Button Grid.Row="3" Grid.Column="1" TextColor="White" Text="ADD TO CART"
                         Command="{Binding Path=BindingContext.AddToCartCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
                         CommandParameter="{Binding}"
-                        Clicked="OnAddToCartClicked" Margin="10,10,0,10" VerticalOptions="End" />
+                        Clicked="OnAddToCartClicked" Margin="10,10,0,10" VerticalOptions="Center" />
                         </Grid>
                     </Frame>
 
