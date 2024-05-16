@@ -6,6 +6,7 @@ using Xamarin.Essentials;
 public partial class UserMainPage : ContentPage
 {
     private DatabaseService _dbService;
+    public User CurrentUser { get; set; }
 
     public UserMainPage()
     {
@@ -23,7 +24,8 @@ public partial class UserMainPage : ContentPage
             User currentUser = _dbService.GetUserById(userId.Value);
             if (currentUser != null)
             {
-                WelcomeLabel.Text = $"Welcome, {currentUser.Name}!";
+                CurrentUser = currentUser;
+                this.BindingContext = this;
             }
         }
     }

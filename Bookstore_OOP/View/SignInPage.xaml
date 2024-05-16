@@ -47,8 +47,8 @@
                 <!--Lest create borderless entry -->
                 <Label FontAttributes="Bold" Text="Forgot Password?" TextColor="Gray" HorizontalTextAlignment="Center" />
                 <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
-                    <Label  FontAttributes="Bold" TextColor="Gray" Text="Don't have account?" VerticalTextAlignment="Center" />
-                    <Label  Text="SIGN UP" FontSize="18" HorizontalOptions="Center"
+                    <Label  FontAttributes="Bold" TextColor="White" Text="Don't have account?" VerticalTextAlignment="Center" />
+                    <Label  Text="Sign Up" FontSize="18" HorizontalOptions="Center"
                            FontAttributes="Bold"
                            TextColor="{x:StaticResource Primary}" />
                     <HorizontalStackLayout.GestureRecognizers>

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Bookstore_OOP.View.UserMainPage"
@@ -6,17 +5,68 @@
              xmlns:view="clr-namespace:Bookstore_OOP.View"
              Title="UserMainPage">
 
-    <StackLayout VerticalOptions="CenterAndExpand" 
-                 HorizontalOptions="CenterAndExpand">
+    <StackLayout VerticalOptions="CenterAndExpand"
+                 HorizontalOptions="CenterAndExpand"
+                 Padding="20">
 
-        <Label x:Name="WelcomeLabel" 
-               Text="Welcome, User!" 
-               FontSize="Large" 
-               HorizontalOptions="CenterAndExpand" 
+        <Image x:Name="UserImage"
+               Source="cheshirski.png"
+                WidthRequest="100"
+                HeightRequest="100"
+               HorizontalOptions="CenterAndExpand"
                VerticalOptions="CenterAndExpand" />
+
+        <Frame BorderColor="Black"
+               CornerRadius="20"
+               Padding="30"
+               VerticalOptions="CenterAndExpand"
+               HorizontalOptions="CenterAndExpand">
+
+            <StackLayout Orientation="Vertical">
+
+                <Label x:Name="WelcomeLabel"
+               Text="{Binding CurrentUser.Name, StringFormat='Hello, {0}!'}"
+               FontSize="30"
+               HorizontalOptions="CenterAndExpand"
+               VerticalOptions="CenterAndExpand" />
+
+                <Label Text="Email:"
+                       HorizontalOptions="StartAndExpand"
+                       TextColor="Gray"
+                       VerticalOptions="CenterAndExpand"
+                       FontSize="30"/>
+                <Label x:Name="EmailLabel"
+                       Text="{Binding CurrentUser.Email}"
+                       HorizontalOptions="StartAndExpand"
+                       VerticalOptions="CenterAndExpand" 
+                       FontSize="30"/>
+
+                <Label Text="Name:"
+                      HorizontalOptions="StartAndExpand"
+                      TextColor="Gray"
+                       VerticalOptions="CenterAndExpand" 
+                       FontSize="30"/>
+                <Label x:Name="NameLabel"
+                       Text="{Binding CurrentUser.Name}"
+                       HorizontalOptions="StartAndExpand"
+                       VerticalOptions="CenterAndExpand" 
+                       FontSize="30"/>
+
+                <Label Text="Phone Number:"
+                      HorizontalOptions="StartAndExpand"
+                       TextColor="Gray"
+                       VerticalOptions="CenterAndExpand" 
+                       FontSize="30"/>
+                <Label x:Name="PhoneNumberLabel"
+                       Text="{Binding CurrentUser.PhoneNumber}" 
+                       HorizontalOptions="StartAndExpand"
+                       VerticalOptions="CenterAndExpand" 
+                       FontSize="30"/>
+
+            </StackLayout>
+
+        </Frame>
 
     </StackLayout>
 
 </ContentPage>
-    
-    

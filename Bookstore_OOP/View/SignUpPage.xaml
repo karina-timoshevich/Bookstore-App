@@ -63,7 +63,7 @@
                             />
 
                     <HorizontalStackLayout Spacing="10">
-                        <Label  FontAttributes="Bold" TextColor="Gray" Text="already have a account?" VerticalTextAlignment="Center" />
+                        <Label  FontAttributes="Bold" TextColor="White" Text="           Already have a account?" VerticalTextAlignment="Center" />
                         <Label  Text="SIGN IN" FontSize="18" 
                            FontAttributes="Bold"
                            TextColor="{x:StaticResource Primary}" />
