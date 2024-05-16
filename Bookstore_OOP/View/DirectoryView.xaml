@@ -28,9 +28,9 @@
 
         <!-- Book List -->
         <CollectionView Grid.Row="1"
-                        ItemsSource="{Binding Books}"
-                        SelectedItem="{Binding SelectedBook}"
-                        BackgroundColor="Transparent">
+                ItemsSource="{Binding Books}"
+                SelectionChanged="OnCollectionViewSelectionChanged"
+                BackgroundColor="Transparent">
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical"
                                  Span="2" />
@@ -53,13 +53,17 @@
                             </Grid.ColumnDefinitions>
 
                             <!-- Book Cover -->
-                            <Image Grid.Row="0" Grid.Column="1" Source="{Binding Book.CoverPath}" Aspect="AspectFill" />
+                            <Image Grid.Row="0" Grid.Column="1" Source="{Binding Book.CoverPath}" Aspect="AspectFill">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnImageTapped" NumberOfTapsRequired="1" />
+                                </Image.GestureRecognizers>
+                            </Image>
                             <Label Grid.Row="1" Grid.Column="1" Text="{Binding Book.Title}" FontSize="Medium" VerticalOptions="Center" HorizontalTextAlignment="Center" Margin="10,0,0,10" />
                             <Label Grid.Row="2" Grid.Column="1" Text="{Binding Book.Price, StringFormat='{0} rub'}" FontSize="Medium" VerticalOptions="Center" HorizontalTextAlignment="Center" Margin="10,0,0,10" />
-                            <Button Grid.Row="3" Grid.Column="1" TextColor="White" Text="ADD TO CART"
+                            <Button Grid.Row="3" Grid.Column="1" TextColor="White" Text="ADD TO CART" HorizontalOptions="FillAndExpand" 
                         Command="{Binding Path=BindingContext.AddToCartCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
                         CommandParameter="{Binding}"
-                        Clicked="OnAddToCartClicked" Margin="10,10,0,10" VerticalOptions="Center" />
+                        Clicked="OnAddToCartClicked" Margin="10,10,10,10" VerticalOptions="Center" />
                         </Grid>
                     </Frame>
 
