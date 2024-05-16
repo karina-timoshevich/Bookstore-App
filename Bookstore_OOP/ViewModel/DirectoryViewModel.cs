@@ -1,5 +1,4 @@
-﻿
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using Bookstore_OOP.View;
@@ -21,7 +20,12 @@ public partial class DirectoryViewModel : ObservableObject
     public DirectoryViewModel()
     {
         dbService.InitDB();
-        Books = new ObservableCollection<BookDisplay>(dbService.GetBooks());
+        InitializeAsync();
+    }
+
+    private async void InitializeAsync()
+    {
+        Books = new ObservableCollection<BookDisplay>(await dbService.GetBooksAsync());
     }
 
     [RelayCommand]
@@ -29,27 +33,28 @@ public partial class DirectoryViewModel : ObservableObject
     {
         if (_selectedBook != null)
         {
-               await Task.Run(() => dbService.AddBookToCart(dbService.GetCurrentUser(), _selectedBook.Book.Id));
+            await Task.Run(() => dbService.AddBookToCart(dbService.GetCurrentUser(), _selectedBook.Book.Id));
         }
 
     }
+
     [ObservableProperty]
     private string _searchText;
 
+    [ObservableProperty]
+    private ObservableCollection<BookDisplay> _searchResults;
+
     [RelayCommand]
-    private async Task SearchBook()
+    public async Task SearchBookAsync()
     {
         if (string.IsNullOrWhiteSpace(SearchText))
         {
-            Books = new ObservableCollection<BookDisplay>(await dbService.GetBooksAsync());
+            SearchResults = new ObservableCollection<BookDisplay>(await dbService.GetBooksAsync());
         }
         else
         {
             var books = await dbService.GetBooksAsync();
-            if (books != null)
-            {
-                Books = new ObservableCollection<BookDisplay>(books.Where(book => book.Book.Title.Contains(SearchText)));
-            }
+            SearchResults = new ObservableCollection<BookDisplay>(books.Where(book => book.Book.Title.Contains(SearchText)));
         }
     }
 }

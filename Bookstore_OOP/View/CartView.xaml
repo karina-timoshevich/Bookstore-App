@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Bookstore_OOP.View.CartView"
@@ -38,8 +37,8 @@
                             <SwipeView>
                                 <SwipeView.LeftItems>
                                     <SwipeItems Mode="Execute">
-                                        <SwipeItem Text="Удалить" 
-                           Command="{Binding Path=BindingContext.RemoveItemCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
+                                        <SwipeItem Text="Удалить"
+                           Command="{Binding Path=BindingContext.RemoveItemCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
                            CommandParameter="{Binding}"
                            BackgroundColor="Red" />
                                     </SwipeItems>
@@ -48,22 +47,22 @@
                                 <SwipeView.Content>
                                     <Frame BorderColor="BlueViolet" CornerRadius="5">
                                         <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
 
-                                            <Label Grid.Column="0" Text="{Binding Book.Title}" FontSize="Medium" VerticalOptions="Center" />
-                                            <!--<Label Grid.Column="1" Text="{Binding AuthorName}" FontSize="Medium" VerticalOptions="Center" />-->
-                                            <Label Grid.Column="2" Text="{Binding Book.Price}" FontSize="Medium" VerticalOptions="Center" />
-                                            <Label Grid.Column="4" Text="{Binding Quantity}" FontSize="Medium" VerticalOptions="Center" />
-
-                                            <Button Grid.Column="3" TextColor="White" Text="+" Command="{Binding Path=BindingContext.IncreaseQuantityCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding}" />
-                                            <Button Grid.Column="5" TextColor="White" Text="-" Command="{Binding Path=BindingContext.DecreaseQuantityCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding}" />
+                                            <Label Grid.Row="0" Grid.Column="0" Text="{Binding Book.Title}" FontSize="Medium" VerticalOptions="Start" HorizontalOptions="Start" />
+                                            <Label Grid.Row="1" Grid.Column="0" Text="{Binding Book.Price, StringFormat='Price: {0}'}" FontSize="Medium" VerticalOptions="End" HorizontalOptions="Start" />
+                                            <Button Grid.Row="1" Grid.Column="1" TextColor="White" Text="+" Command="{Binding Path=BindingContext.IncreaseQuantityCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding}" HorizontalOptions="End" />
+                                            <Label Grid.Row="1" Grid.Column="2" Text="{Binding Quantity}" FontSize="Medium" VerticalOptions="Center" HorizontalOptions="Center" />
+                                            <Button Grid.Row="1" Grid.Column="3" TextColor="White" Text="-" Command="{Binding Path=BindingContext.DecreaseQuantityCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding}" HorizontalOptions="End" />
                                         </Grid>
                                     </Frame>
                                 </SwipeView.Content>
@@ -75,7 +74,7 @@
             </ListView>
 
         </Border>
-        <Entry Placeholder="Введите промокод" Text="{Binding PromoCode}" HorizontalOptions="Center" />
+        <Entry Placeholder="Введите промокод" Text="{Binding PromoCode}" HorizontalOptions="Center" Margin="0,20,0,20" />
         <Label HorizontalOptions="Center" VerticalOptions="EndAndExpand">
             <Label.FormattedText>
                 <FormattedString>

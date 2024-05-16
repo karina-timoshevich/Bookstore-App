@@ -23,8 +23,9 @@
 
                 <!-- Search Bar -->
                 <Border Grid.Row="1"
-                 Grid.Column="0"
-                 Margin="30, 0, 0, 0">
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        Margin="30, 0, 30, 0">
 
                     <SearchBar FontSize="Medium"
                     Placeholder="Search..."
@@ -32,7 +33,7 @@
 
                         <SearchBar.Behaviors>
                             <xct:EventToCommandBehavior EventName="TextChanged"
-                                        Command="{Binding SearchUserCommand}"/>
+                             Command="{Binding SearchUserCommand}"/>
                         </SearchBar.Behaviors>
 
                     </SearchBar>

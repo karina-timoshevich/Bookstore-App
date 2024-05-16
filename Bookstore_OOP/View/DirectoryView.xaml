@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Bookstore_OOP.View.DirectoryView"
@@ -44,23 +43,27 @@
                     <ViewCell>
                         <Frame BorderColor="BlueViolet" CornerRadius="5">
                             <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
                                 <!-- Book Cover -->
-                                <Image Grid.Column="0" Source="{Binding Book.CoverPath}" Aspect="AspectFill" />
+                                <Image Grid.Row="0" Grid.Column="0" Source="{Binding Book.CoverPath}" Aspect="AspectFit" />
 
-                                <Label Grid.Column="1" Text="{Binding Book.Title}" FontSize="Medium" VerticalOptions="Center" />
+                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding Book.Title}" FontSize="Medium" VerticalOptions="Center" HorizontalTextAlignment="Center" Margin="10,0,0,0" />
                                 <!--<Label Grid.Column="2" Text="{Binding AuthorName}" FontSize="Medium" VerticalOptions="Center" />-->
-                                <Label Grid.Column="3" Text="{Binding Book.Price}" FontSize="Medium" VerticalOptions="Center" />
-                                <Button Grid.Column="4" TextColor="White" Text="ADD TO CART" 
-                            Command="{Binding Path=BindingContext.AddToCartCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
+                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding Book.Price, StringFormat='{0} rub'}" FontSize="Medium" VerticalOptions="Center" HorizontalTextAlignment="Center" Margin="10,0,0,0" />
+                                <Button Grid.Row="2" Grid.Column="1" TextColor="White" Text="ADD TO CART"
+                            Command="{Binding Path=BindingContext.AddToCartCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
                             CommandParameter="{Binding}"
-                            Clicked="OnAddToCartClicked" />
+                            Clicked="OnAddToCartClicked" Margin="10,0,0,0" />
                             </Grid>
                         </Frame>
 

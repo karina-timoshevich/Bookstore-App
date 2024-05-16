@@ -5,13 +5,22 @@
     <ScrollView>
         <StackLayout Padding="20" Spacing="10">
             <Image Source="{Binding SelectedBook.Book.CoverPath}" Aspect="AspectFit" HeightRequest="200" />
-            <Label Text="{Binding SelectedBook.Book.Title}" FontSize="Large" HorizontalOptions="Start" />
-            <Label Text="{Binding SelectedBook.Book.AuthorName}" FontSize="Medium" HorizontalOptions="Start" />
-            <Label Text="{Binding SelectedBook.Book.Price}" FontSize="Medium" HorizontalOptions="Start" />
-            <Label Text="{Binding SelectedBook.Book.Year}" FontSize="Medium" HorizontalOptions="Start" />
-            <Label Text="{Binding SelectedBook.Book.Publisher}" FontSize="Medium" HorizontalOptions="Start" />
-            <Button TextColor="White" Text="ADD TO CART" 
-Command="{Binding Path=BindingContext.AddToCartCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
+            <Frame Padding="10" CornerRadius="5">
+                <StackLayout Spacing="10">
+                    <Label Text="Title" FontSize="Medium" HorizontalOptions="Start" TextColor="Gray" />
+                    <Label Text="{Binding SelectedBook.Book.Title}" FontSize="Large" HorizontalOptions="Start" />
+                    <Label Text="Author" FontSize="Medium" HorizontalOptions="Start" TextColor="Gray" />
+                    <Label Text="{Binding AuthorName}" FontSize="Medium" HorizontalOptions="Start" />
+                    <Label Text="Price" FontSize="Medium" HorizontalOptions="Start" TextColor="Gray" />
+                    <Label Text="{Binding SelectedBook.Book.Price, StringFormat='{0} rubles'}" FontSize="Medium" HorizontalOptions="Start" />
+                    <Label Text="Year" FontSize="Medium" HorizontalOptions="Start" TextColor="Gray" />
+                    <Label Text="{Binding SelectedBook.Book.Year}" FontSize="Medium" HorizontalOptions="Start" />
+                    <Label Text="Publisher" FontSize="Medium" HorizontalOptions="Start" TextColor="Gray" />
+                    <Label Text="{Binding SelectedBook.Book.Publisher}" FontSize="Medium" HorizontalOptions="Start" />
+                </StackLayout>
+            </Frame>
+            <Button TextColor="White" Text="ADD TO CART"
+Command="{Binding Path=BindingContext.AddToCartCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
 CommandParameter="{Binding SelectedBook}"
 Clicked="OnAddToCartClicked" />
         </StackLayout>

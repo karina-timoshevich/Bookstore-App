@@ -364,7 +364,51 @@ namespace Bookstore_OOP.Services
 
             return books;
         }
+        public async Task<List<BookDisplay>> GetBooksAsync()
+        {
+            var books = new List<BookDisplay>();
 
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для получения всех книг
+                    cmd.CommandText = "SELECT * FROM Books";
+
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var book = new Book
+                            {
+                                Id = (int)reader["ID"],
+                                Title = (string)reader["Title"],
+                                AuthorID = (int)reader["AuthorID"],
+                                Publisher = (string)reader["Publisher"],
+                                Year = (int)reader["Year"],
+                                Genre = (string)reader["Genre"],
+                                Price = (decimal)reader["Price"],
+                                CoverPath = (string)reader["CoverPath"]
+                            };
+
+                            var authorName = GetAuthorNameById(book.AuthorID);
+
+                            books.Add(new BookDisplay
+                            {
+                                Book = book,
+                                AuthorName = authorName
+                            });
+                        }
+                    }
+                }
+            }
+
+            return books;
+        }
         public List<CartItemDisplay> GetCartItems(int userId)
         {
             var cartItems = new List<CartItemDisplay>();
