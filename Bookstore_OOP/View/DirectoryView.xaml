@@ -27,50 +27,45 @@
         </SearchBar>
 
         <!-- Book List -->
-        <ListView Grid.Row="1"
-                  HasUnevenRows="True"
-                  ItemsSource="{Binding Books}"
-                  SelectedItem="{Binding SelectedBook}"
-                  BackgroundColor="Transparent"
-                  VerticalScrollBarVisibility="Never"
-                  HorizontalScrollBarVisibility="Never"
-                  ItemSelected="OnItemSelected"
-                  Header="{x:Null}">
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Books}"
+                        SelectedItem="{Binding SelectedBook}"
+                        BackgroundColor="Transparent">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical"
+                                 Span="2" />
+            </CollectionView.ItemsLayout>
 
-            <ListView.ItemTemplate>
+            <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type model:BookDisplay}">
 
-                    <ViewCell>
-                        <Frame BorderColor="BlueViolet" CornerRadius="5">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
+                    <Frame BorderColor="BlueViolet" CornerRadius="5" Padding="0">
+                        <Grid Padding="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="280" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="70" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                                <!-- Book Cover -->
-                                <Image Grid.Row="0" Grid.Column="0" Source="{Binding Book.CoverPath}" Aspect="AspectFit" />
+                            <!-- Book Cover -->
+                            <Image Grid.Row="0" Grid.Column="1" Source="{Binding Book.CoverPath}" Aspect="AspectFill" />
+                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding Book.Title}" FontSize="Medium" VerticalOptions="Center" HorizontalTextAlignment="Center" Margin="10,0,0,10" />
+                            <Label Grid.Row="2" Grid.Column="1" Text="{Binding Book.Price, StringFormat='{0} rub'}" FontSize="Medium" VerticalOptions="Center" HorizontalTextAlignment="Center" Margin="10,0,0,10" />
+                            <Button Grid.Row="3" Grid.Column="1" TextColor="White" Text="ADD TO CART"
+                        Command="{Binding Path=BindingContext.AddToCartCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                        CommandParameter="{Binding}"
+                        Clicked="OnAddToCartClicked" Margin="10,10,0,10" VerticalOptions="End" />
+                        </Grid>
+                    </Frame>
 
-                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding Book.Title}" FontSize="Medium" VerticalOptions="Center" HorizontalTextAlignment="Center" Margin="10,0,0,0" />
-                                <!--<Label Grid.Column="2" Text="{Binding AuthorName}" FontSize="Medium" VerticalOptions="Center" />-->
-                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding Book.Price, StringFormat='{0} rub'}" FontSize="Medium" VerticalOptions="Center" HorizontalTextAlignment="Center" Margin="10,0,0,0" />
-                                <Button Grid.Row="2" Grid.Column="1" TextColor="White" Text="ADD TO CART"
-                            Command="{Binding Path=BindingContext.AddToCartCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                            CommandParameter="{Binding}"
-                            Clicked="OnAddToCartClicked" Margin="10,0,0,0" />
-                            </Grid>
-                        </Frame>
-
-                    </ViewCell>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </Grid>
 
 </ContentPage>
