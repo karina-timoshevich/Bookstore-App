@@ -4,11 +4,16 @@
              xmlns:model="clr-namespace:Bookstore_OOP.Model"
              Title="CartView">
 
-    <StackLayout>
-        <Border Grid.Row="2"
-                Grid.ColumnSpan="3"
-                Margin="30, 0, 30, 0">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
+        <Border Grid.Row="0"
+                Grid.ColumnSpan="3">
             <ListView HasUnevenRows="True"
                       MinimumHeightRequest="485"
                       MaximumHeightRequest="485"
@@ -37,15 +42,15 @@
                             <SwipeView>
                                 <SwipeView.LeftItems>
                                     <SwipeItems Mode="Execute">
-                                        <SwipeItem Text="Удалить"
-                           Command="{Binding Path=BindingContext.RemoveItemCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                           CommandParameter="{Binding}"
-                           BackgroundColor="Red" />
+                                        <SwipeItem Text="Delete"
+                                                   Command="{Binding Path=BindingContext.RemoveItemCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                   CommandParameter="{Binding}"
+                                                   BackgroundColor="Red" />
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
 
                                 <SwipeView.Content>
-                                    <Frame BorderColor="BlueViolet" CornerRadius="5">
+                                    <Frame BorderColor="BlueViolet" CornerRadius="10">
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="*" />
@@ -59,7 +64,7 @@
                                             </Grid.ColumnDefinitions>
 
                                             <Label Grid.Row="0" Grid.Column="0" Text="{Binding Book.Title}" FontSize="Medium" VerticalOptions="Start" HorizontalOptions="Start" />
-                                            <Label Grid.Row="1" Grid.Column="0" Text="{Binding Book.Price, StringFormat='Price: {0}'}" FontSize="Medium" VerticalOptions="End" HorizontalOptions="Start" />
+                                            <Label Grid.Row="1" Grid.Column="0" Text="{Binding Book.Price, StringFormat='Price: {0} rub.'}" FontSize="Medium" VerticalOptions="End" HorizontalOptions="Start" />
                                             <Button Grid.Row="1" Grid.Column="1" TextColor="White" Text="+" Command="{Binding Path=BindingContext.IncreaseQuantityCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding}" HorizontalOptions="End" />
                                             <Label Grid.Row="1" Grid.Column="2" Text="{Binding Quantity}" FontSize="Medium" VerticalOptions="Center" HorizontalOptions="Center" />
                                             <Button Grid.Row="1" Grid.Column="3" TextColor="White" Text="-" Command="{Binding Path=BindingContext.DecreaseQuantityCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding}" HorizontalOptions="End" />
@@ -72,20 +77,21 @@
                 </ListView.ItemTemplate>
 
             </ListView>
-
         </Border>
-        <Entry Placeholder="Введите промокод" Text="{Binding PromoCode}" HorizontalOptions="Center" Margin="0,20,0,20" />
-        <Label HorizontalOptions="Center" VerticalOptions="EndAndExpand">
+
+        <Entry Grid.Row="1" Placeholder="Enter promocode" Text="{Binding PromoCode}" HorizontalOptions="Center" HorizontalTextAlignment="Center" WidthRequest="150" Margin="0,20,0,20" />
+
+        <Label Grid.Row="2" HorizontalOptions="Center" VerticalOptions="EndAndExpand" WidthRequest="200">
             <Label.FormattedText>
                 <FormattedString>
-                    <Span Text="Общая стоимость заказа: " />
+                    <Span Text="Total cost of your order: " />
                     <Span Text="{Binding TotalPrice}" />
-                    <Span Text=" руб." />
+                    <Span Text=" rub." />
                 </FormattedString>
             </Label.FormattedText>
         </Label>
-        <Button Text="Оформить заказ" Command="{Binding PlaceOrderCommand}" HorizontalOptions="Center" VerticalOptions="EndAndExpand" />
-        <!--<Label Text="{Binding TotalCost}" HorizontalOptions="Center" VerticalOptions="EndAndExpand" />-->
-    </StackLayout>
+
+        <Button Grid.Row="3" Text="Place order" Command="{Binding PlaceOrderCommand}" HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Margin="20,10,20,10"/>
+    </Grid>
 
 </ContentPage>

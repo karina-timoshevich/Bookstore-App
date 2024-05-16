@@ -14,19 +14,20 @@
             <Label Grid.Row="0"
             Grid.ColumnSpan="3"
             Text="Books"
-            FontSize="Header"
+            FontSize="16"
             Margin="0, 10, 0, 0"
             HorizontalOptions="Center" />
 
             <!-- Search Bar -->
             <Border Grid.Row="1"
-             Grid.Column="0"
-             Margin="30, 0, 0, 0">
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            Margin="30, 0, 30, 0">
 
-                <!--<SearchBar FontSize="Medium"
-            Placeholder="Search..."
-            Text="{Binding SearchText}"
-            SearchCommand="{Binding SearchCommand}"></SearchBar>-->
+                <SearchBar FontSize="Medium"
+               Placeholder="Search..."
+               Text="{Binding SearchText}"
+               SearchCommand="{Binding SearchCommand}"></SearchBar>
 
             </Border>
 
@@ -47,16 +48,16 @@
                     <ListView.Header>
                         <Grid>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="3*" />
-                                <ColumnDefinition Width="3*" />
-                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="50" />
+                                <!--<ColumnDefinition Width="3*" />-->
                             </Grid.ColumnDefinitions>
 
-                            <Label Grid.Column="0" Text="BookId" FontSize="Medium" HorizontalOptions="Center" />
-                            <Label Grid.Column="1" Text="Title" FontSize="Medium" HorizontalOptions="Center" />
-                            <Label Grid.Column="2" Text="AuthorID" FontSize="Medium" HorizontalOptions="Center" />
-                            <Label Grid.Column="3" Text="Price" FontSize="Medium" HorizontalOptions="Center" />
+                            <Label Grid.Column="0" Text="ID" FontSize="Medium" HorizontalOptions="Center" TextColor="Gray"/>
+                            <Label Grid.Column="1" Text="Title" FontSize="Medium" HorizontalOptions="Center" TextColor="Gray"/>
+                            <!--<Label Grid.Column="2" Text="AuthorID" FontSize="Medium" HorizontalOptions="Center" />-->
+                            <Label Grid.Column="3" Text="Price" FontSize="Medium" HorizontalOptions="End" TextColor="Gray"/>
                         </Grid>
                     </ListView.Header>
 
@@ -65,16 +66,16 @@
                             <ViewCell>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40" />
                                         <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
+                                        <!--<ColumnDefinition Width="*" />-->
+                                        <ColumnDefinition Width="50" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Label Grid.Column="0" Text="{Binding Book.Id}" FontSize="Medium" VerticalOptions="Center" />
-                                    <Label Grid.Column="1" Text="{Binding Book.Title}" FontSize="Medium" VerticalOptions="Center" />
-                                    <Label Grid.Column="2" Text="{Binding Book.AuthorID}" FontSize="Medium" VerticalOptions="Center" />
-                                    <Label Grid.Column="3" Text="{Binding Book.Price}" FontSize="Medium" VerticalOptions="Center" />
+                                    <Label Grid.Column="0" Text="{Binding Book.Id}" FontSize="18" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                    <Label Grid.Column="1" Text="{Binding Book.Title}" FontSize="20" VerticalOptions="Center" />
+                                    <!--<Label Grid.Column="2" Text="{Binding Book.AuthorID}" FontSize="Medium" VerticalOptions="Center" />-->
+                                    <Label Grid.Column="3" Text="{Binding Book.Price}" FontSize="Medium" VerticalOptions="Center" HorizontalOptions="Center"/>
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>

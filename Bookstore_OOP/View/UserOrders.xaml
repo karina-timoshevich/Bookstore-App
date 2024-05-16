@@ -1,31 +1,38 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Bookstore_OOP.View.UserOrders"
              Title="UserOrders">
-    <VerticalStackLayout>
-        <Label
-            Text="Your Orders"
-            VerticalOptions="Start"
-            HorizontalOptions="Center" />
+    <StackLayout>
+        <Grid BackgroundColor="White" Padding="15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Text="Order" HorizontalOptions="Start" TextColor="Gray"/>
+            <Label Grid.Column="1" Text="Date" HorizontalOptions="Center" TextColor="Gray" />
+            <Label Grid.Column="2" Text="Status" HorizontalOptions="Center" TextColor="Gray" />
+        </Grid>
         <CollectionView x:Name="OrdersCollection"
-                ItemsSource="{Binding Orders}"
-                SelectionMode="Single"
-                SelectionChanged="OnSelectionChanged">
+            ItemsSource="{Binding Orders}"
+            SelectionMode="Single"
+            SelectionChanged="OnSelectionChanged">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Grid ColumnSpacing="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Text="{Binding Id}" />
-                        <Label Grid.Column="1" Text="{Binding OrderDate}" />
-                        <Label Grid.Column="2" Text="{Binding Status}" />
-                    </Grid>
+                    <Frame BorderColor="Black" CornerRadius="10" Padding="15">
+                        <Grid ColumnSpacing="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Text="{Binding Id}" FontSize="20" HorizontalOptions="Start" />
+                            <Label Grid.Column="1" Text="{Binding OrderDate, StringFormat='{0:dd/MM/yyyy}'}" FontSize="20" HorizontalOptions="Center" />
+                            <Label Grid.Column="2" Text="{Binding Status}" FontSize="20" HorizontalOptions="Center" />
+                        </Grid>
+                    </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-    </VerticalStackLayout>
+    </StackLayout>
 </ContentPage>

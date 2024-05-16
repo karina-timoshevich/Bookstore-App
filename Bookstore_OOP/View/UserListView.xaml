@@ -8,7 +8,7 @@
     <Grid RowDefinitions="*, auto">
 
         <ScrollView Grid.Row="0">
-            <Grid RowDefinitions="auto, auto, auto, auto"
+            <Grid RowDefinitions="auto, auto, 530, 0"
            ColumnDefinitions="*, *, *"
            ColumnSpacing="20"
            RowSpacing="20">
@@ -25,7 +25,7 @@
                 <Border Grid.Row="1"
                         Grid.Column="0"
                         Grid.ColumnSpan="3"
-                        Margin="30, 0, 30, 0">
+                        Margin="20, 0, 20, 0">
 
                     <SearchBar FontSize="Medium"
                     Placeholder="Search..."
@@ -43,11 +43,12 @@
                 <!-- User List -->
                 <Border Grid.Row="2"
                  Grid.ColumnSpan="3"
-                 Margin="30, 0, 30, 0">
+                 Margin="20, 0, 20, 0">
 
                     <ListView HasUnevenRows="True"
                        MinimumHeightRequest="485"
                        MaximumHeightRequest="485"
+                       RowHeight="140"
                        ItemsSource="{Binding Users}"
                        SelectedItem="{Binding SelectedUser}"
                        BackgroundColor="Transparent"
@@ -57,34 +58,35 @@
                         <ListView.Header>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="40" />
                                     <ColumnDefinition Width="3*" />
-                                    <ColumnDefinition Width="3*" />
+                                    <!--<ColumnDefinition Width="3*" />-->
                                     <ColumnDefinition Width="3*" />
                                 </Grid.ColumnDefinitions>
 
-                                <Label Grid.Column="0" Text="Id" FontSize="Medium" HorizontalOptions="Center" />
-                                <Label Grid.Column="1" Text="Name" FontSize="Medium" HorizontalOptions="Center" />
-                                <Label Grid.Column="2" Text="Email" FontSize="Medium" HorizontalOptions="Center" />
-                                <Label Grid.Column="3" Text="Mobile" FontSize="Medium" HorizontalOptions="Center" />
+                                <Label Grid.Column="0" Text="ID" FontSize="Medium" HorizontalOptions="Center" TextColor="Gray" />
+                                <Label Grid.Column="1" Text="Name" FontSize="Medium" HorizontalOptions="Center" TextColor="Gray"/>
+                                <!--<Label Grid.Column="2" Text="Email" FontSize="Medium" HorizontalOptions="Center" />-->
+                                <Label Grid.Column="2" Text="Mobile" FontSize="Medium" HorizontalOptions="Center" TextColor="Gray"/>
                             </Grid>
                         </ListView.Header>
 
                         <ListView.ItemTemplate>
+                            
                             <DataTemplate x:DataType="{x:Type model:User}">
                                 <ViewCell>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="35" />
+                                            <ColumnDefinition Width="130" />
+                                            <!--<ColumnDefinition Width="*" />-->
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Label Grid.Column="0" Text="{Binding Id}" FontSize="Medium" VerticalOptions="Center" />
-                                        <Label Grid.Column="1" Text="{Binding Name}" FontSize="Medium" VerticalOptions="Center" />
-                                        <Label Grid.Column="2" Text="{Binding Email}" FontSize="Medium" VerticalOptions="Center" />
-                                        <Label Grid.Column="3" Text="{Binding PhoneNumber}" FontSize="Medium" VerticalOptions="Center" />
+                                        <Label Grid.Column="0" Text="{Binding Id}" FontSize="22" VerticalOptions="Center" HorizontalOptions="Center" />
+                                        <Label Grid.Column="1" Text="{Binding Name}" FontSize="22" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                        <!--<Label Grid.Column="2" Text="{Binding Email}" FontSize="Medium" VerticalOptions="Center" />-->
+                                        <Label Grid.Column="2" Text="{Binding PhoneNumber}" FontSize="20" VerticalOptions="Center" />
                                     </Grid>
                                 </ViewCell>
                             </DataTemplate>
@@ -99,8 +101,8 @@
         <!-- Control Buttons -->
         <Grid Grid.Row="1"
               RowDefinitions="auto"
-              ColumnDefinitions="*, *, *"
-              ColumnSpacing="20"
+              ColumnDefinitions="*, *, 150"
+              ColumnSpacing="10"
               RowSpacing="20"
               Padding="20">
 
