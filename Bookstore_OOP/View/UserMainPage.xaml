@@ -11,8 +11,8 @@
 
         <Image x:Name="UserImage"
                Source="cheshirski.png"
-                WidthRequest="100"
-                HeightRequest="100"
+                WidthRequest="300"
+                HeightRequest="170"
                HorizontalOptions="CenterAndExpand"
                VerticalOptions="CenterAndExpand" />
 
