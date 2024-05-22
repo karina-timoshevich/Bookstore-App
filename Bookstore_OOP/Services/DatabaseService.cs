@@ -1168,7 +1168,7 @@ namespace Bookstore_OOP.Services
         }
 
        
-        public async Task MakePayment(int userId, decimal totalprice)
+        public async Task<string> MakePayment(int userId, decimal totalprice)
         {
             Order order = null;
 
@@ -1204,7 +1204,7 @@ namespace Bookstore_OOP.Services
             if (order == null)
             {
                 Debug.WriteLine("No order found for the given user.");
-                return;
+                return "No order found for the given user.";
             }
             order.Capture = true;
             order.Confirmation = new Redirection
@@ -1222,18 +1222,7 @@ namespace Bookstore_OOP.Services
             Debug.WriteLine('\n');
             Debug.WriteLine(json);
             HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
-            //var content = new StringContent(
-            //    $@"{{
-            //""amount"": {{
-            //""value"": {totalPrice},
-            //""currency"": ""RUB""
-            //}},
-            //""capture"": true,
-            //""confirmation"": {{
-            //""type"": ""redirect"",
-            //    ""return_url"": ""https://www.paymentgateway.com/paymentfinished""
-            //}}
-            //}}", Encoding.UTF8);
+
 
             var client = new HttpClient();
             var contentString = await content.ReadAsStringAsync();
@@ -1260,15 +1249,19 @@ namespace Bookstore_OOP.Services
             {
                 var content_with_payment = await response.Content.ReadAsStringAsync();
                 var options_2 = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-              //  Debug.WriteLine();
+                Payment payment = JsonSerializer.Deserialize<Payment>(content_with_payment, options);
+                Debug.WriteLine(payment.Confirmation.Confirmation_url);
                 Debug.WriteLine(content_with_payment);
+                return payment.Confirmation.Confirmation_url;
+                
 
             }
             else
             {
                 Debug.WriteLine(response.StatusCode.ToString());
-                
+                return response.StatusCode.ToString();
             }
+           
         }
     }
 }
