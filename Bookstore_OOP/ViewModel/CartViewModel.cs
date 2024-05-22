@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Bookstore_OOP.View;
 using Bookstore_OOP.Model;
 using Bookstore_OOP.Services;
+using System.Diagnostics;
 //using static Android.Content.ClipData;
 
 namespace Bookstore_OOP.ViewModel
@@ -66,7 +67,11 @@ namespace Bookstore_OOP.ViewModel
             await Task.Run(() => dbService.PlaceOrder(dbService.GetCurrentUser()));
             CartItems.Clear();
             TotalPrice = GetTotalPrice();
-            await dbService.MakePayment(dbService.GetCurrentUser(), TotalPrice);
+            string url = await dbService.MakePayment(dbService.GetCurrentUser(), TotalPrice);
+            string encodedUrl = Uri.EscapeDataString(url);
+            await Shell.Current.GoToAsync($"TestPayment?Url={encodedUrl}");
+            Debug.WriteLine(url);
+           
         }
 
         [RelayCommand]

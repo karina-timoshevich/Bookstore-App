@@ -20,8 +20,8 @@ namespace Bookstore_OOP.Services
     
         public DatabaseService()
         {
-            //_connectionString = "Host=10.0.2.2;Port=5432 ;Username=karina ;Password=password ;Database=bookstore";
-            _connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
+            _connectionString = "Host=10.0.2.2;Port=5432 ;Username=karina ;Password=password ;Database=bookstore";
+            //_connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
         }
 
         public void CreateTable()
@@ -938,6 +938,55 @@ namespace Bookstore_OOP.Services
             return bookPrice;
         }
 
+        public void DeleteCartItemsByUserId(int userId)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для удаления всех элементов из CartItems для данного пользователя
+                    cmd.CommandText = "DELETE FROM CartItems WHERE UserId = @userId";
+                    cmd.Parameters.AddWithValue("userId", userId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteLastUserOrder(int userId)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для получения ID последнего заказа пользователя
+                    cmd.CommandText = "SELECT MAX(Id) FROM Orders WHERE UserId = @userId";
+                    cmd.Parameters.AddWithValue("userId", userId);
+
+                    var orderId = (int)cmd.ExecuteScalar();
+
+                    // SQL-запрос для удаления всех элементов заказа, связанных с последним заказом пользователя
+                    cmd.CommandText = "DELETE FROM OrderItems WHERE OrderId = @orderId";
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("orderId", orderId);
+
+                    cmd.ExecuteNonQuery();
+
+                    // SQL-запрос для удаления последнего заказа пользователя
+                    cmd.CommandText = "DELETE FROM Orders WHERE Id = @orderId";
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
         public decimal GetTotalPrice(int userId)
         {
             decimal totalPrice = 0;
@@ -1009,13 +1058,6 @@ namespace Bookstore_OOP.Services
 
                         cmd.ExecuteNonQuery();
                     }
-
-                    // Удаление всех элементов из корзины
-                    cmd.CommandText = "DELETE FROM CartItems WHERE UserId = @userId";
-                    cmd.Parameters.Clear();
-                    cmd.Parameters.AddWithValue("userId", userId);
-
-                    cmd.ExecuteNonQuery();
                 }
             }
 
@@ -1167,7 +1209,26 @@ namespace Bookstore_OOP.Services
             }
         }
 
-       
+        public void UpdateOrderConfirmationUrl(int orderId, string confirmationUrl)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для обновления URL подтверждения для заказа
+                    cmd.CommandText = "UPDATE Orders SET comfirmation_return_url = @confirmationUrl WHERE Id = @orderId";
+                    cmd.Parameters.AddWithValue("confirmationUrl", confirmationUrl);
+                    cmd.Parameters.AddWithValue("orderId", orderId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         public async Task<string> MakePayment(int userId, decimal totalprice)
         {
             Order order = null;
@@ -1252,9 +1313,13 @@ namespace Bookstore_OOP.Services
                 Payment payment = JsonSerializer.Deserialize<Payment>(content_with_payment, options);
                 Debug.WriteLine(payment.Confirmation.Confirmation_url);
                 Debug.WriteLine(content_with_payment);
+                order.Confirmation.Return_url = payment.Confirmation.Confirmation_url;
+
+                // Обновляем URL подтверждения в базе данных
+                UpdateOrderConfirmationUrl(order.Id, payment.Confirmation.Confirmation_url);
+
                 return payment.Confirmation.Confirmation_url;
                 
-
             }
             else
             {
