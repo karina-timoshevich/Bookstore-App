@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Bookstore_OOP.ViewModel;
+using System.Net.Http.Headers;
+using System.Text.Json;
 
 
 namespace Bookstore_OOP.Services
@@ -18,8 +20,8 @@ namespace Bookstore_OOP.Services
     
         public DatabaseService()
         {
-            _connectionString = "Host=10.0.2.2;Port=5432 ;Username=karina ;Password=password ;Database=bookstore";
-            //_connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
+            //_connectionString = "Host=10.0.2.2;Port=5432 ;Username=karina ;Password=password ;Database=bookstore";
+            _connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
         }
 
         public void CreateTable()
@@ -972,6 +974,8 @@ namespace Bookstore_OOP.Services
             return totalPrice;
         }
 
+
+
         // Объявление события
         public event Action OrderAdded;
         public void PlaceOrder(int userId)
@@ -1160,6 +1164,110 @@ namespace Bookstore_OOP.Services
 
                     author.Id = (int)cmd.ExecuteScalar();
                 }
+            }
+        }
+
+       
+        public async Task MakePayment(int userId, decimal totalprice)
+        {
+            Order order = null;
+
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для получения последнего заказа пользователя
+                    cmd.CommandText = @"SELECT * FROM Orders WHERE UserId = @userId AND Id = (SELECT MAX(Id) FROM Orders WHERE UserId = @userId)";
+                    cmd.Parameters.AddWithValue("userId", userId);
+
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            order = new Order
+                            {
+                                Id = (int)reader["ID"],
+                                UserId = (int)reader["UserID"],
+                                OrderDate = (DateTime)reader["OrderDate"],
+                                TotalPrice = (decimal)reader["TotalPrice"],
+                                Status = (string)reader["Status"]
+                            };
+                        }
+                    }
+                }
+            }
+
+            if (order == null)
+            {
+                Debug.WriteLine("No order found for the given user.");
+                return;
+            }
+            order.Capture = true;
+            order.Confirmation = new Redirection
+            {
+                Type = "redirect",
+                Return_url = "https://github.com/karina-timoshevich"
+            };
+            order.Amount = new Amount
+            {
+                Value = order.TotalPrice.ToString(),
+                Currency = "RUB"
+            };
+            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            string json = System.Text.Json.JsonSerializer.Serialize(order, options);
+            Debug.WriteLine('\n');
+            Debug.WriteLine(json);
+            HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            //var content = new StringContent(
+            //    $@"{{
+            //""amount"": {{
+            //""value"": {totalPrice},
+            //""currency"": ""RUB""
+            //}},
+            //""capture"": true,
+            //""confirmation"": {{
+            //""type"": ""redirect"",
+            //    ""return_url"": ""https://www.paymentgateway.com/paymentfinished""
+            //}}
+            //}}", Encoding.UTF8);
+
+            var client = new HttpClient();
+            var contentString = await content.ReadAsStringAsync();
+            Debug.WriteLine(contentString);
+            var byteArray = Encoding.ASCII.GetBytes("390747:test_hY31ddxSx520A4ARG0FcCqu0fbeKhDdVgtkiauX26TM");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri("https://api.yookassa.ru/v3/payments"),
+                Headers =
+                     {
+                         { "Idempotence-Key", DateTime.Now.ToString() },
+                     },
+                Content = content
+            };
+
+            var response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content_with_payment = await response.Content.ReadAsStringAsync();
+                var options_2 = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+              //  Debug.WriteLine();
+                Debug.WriteLine(content_with_payment);
+
+            }
+            else
+            {
+                Debug.WriteLine(response.StatusCode.ToString());
+                
             }
         }
     }

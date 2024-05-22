@@ -66,6 +66,7 @@ namespace Bookstore_OOP.ViewModel
             await Task.Run(() => dbService.PlaceOrder(dbService.GetCurrentUser()));
             CartItems.Clear();
             TotalPrice = GetTotalPrice();
+            await dbService.MakePayment(dbService.GetCurrentUser(), TotalPrice);
         }
 
         [RelayCommand]

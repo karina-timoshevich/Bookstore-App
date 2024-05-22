@@ -6,14 +6,69 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace Bookstore_OOP.Model
 {
+    public class Amount
+    {
+
+
+        //   [JsonProperty("value")]
+        public string Value { get; set; }
+
+        //  [JsonProperty("currency")]
+        public string Currency { get; set; }
+
+        //[JsonIgnore]
+        //public int OrderId { get; set; }
+        //[JsonIgnore]
+        //public Order Order { get; set; }
+
+        //[JsonIgnore]
+        //public string PaymentId { get; set; }
+        //[JsonIgnore]
+        //public Payment Payment { get; set; }
+
+    }
+
+    public class Confirmation
+    {
+
+        //  [JsonProperty("type")]
+        public string Type { get; set; }
+
+        //  [JsonProperty("confirmation_url")]
+        public string Confirmation_url { get; set; }
+
+        //[JsonIgnore]
+        //public string? PaymentId { get; set; }
+        //[JsonIgnore]
+        //public Payment? Payment { get; set; }
+    }
+
+    public class Redirection
+    {
+
+        //  [JsonProperty("type")]
+        public string Type { get; set; }
+
+        //  [JsonProperty("confirmation_url")]
+        public string Return_url { get; set; }
+        //[JsonIgnore]
+        //public int OrderId { get; set; }
+        //[JsonIgnore]
+        //public Order Order { get; set; }
+
+
+    }
     public class Order : INotifyPropertyChanged
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [JsonIgnore]
         private int _id;
+        [JsonIgnore]
         public int Id
         {
             get { return _id; }
@@ -26,8 +81,9 @@ namespace Bookstore_OOP.Model
                 }
             }
         }
-
+        [JsonIgnore]
         private int _userId;
+        [JsonIgnore]
         public int UserId
         {
             get { return _userId; }
@@ -40,8 +96,9 @@ namespace Bookstore_OOP.Model
                 }
             }
         }
-
+        [JsonIgnore]
         private DateTime _orderDate;
+        [JsonIgnore]
         public DateTime OrderDate
         {
             get { return _orderDate; }
@@ -54,8 +111,9 @@ namespace Bookstore_OOP.Model
                 }
             }
         }
-
+        [JsonIgnore]
         private decimal _totalPrice;
+        [JsonIgnore]
         public decimal TotalPrice
         {
             get { return _totalPrice; }
@@ -68,8 +126,9 @@ namespace Bookstore_OOP.Model
                 }
             }
         }
-
+        [JsonIgnore]
         private List<OrderItem> _items;
+        [JsonIgnore]
         public List<OrderItem> Items
         {
             get { return _items; }
@@ -82,8 +141,9 @@ namespace Bookstore_OOP.Model
                 }
             }
         }
-
+        [JsonIgnore]
         private string _status;
+        [JsonIgnore]
         public string Status
         {
             get { return _status; }
@@ -96,6 +156,16 @@ namespace Bookstore_OOP.Model
                 }
             }
         }
+
+        //  [JsonProperty("amount")]
+        public Amount Amount { get; set; }
+
+        //  [JsonProperty("capture")]
+        public bool Capture { get; set; }
+
+        //  [JsonProperty("confirmation")]
+        public Redirection Confirmation { get; set; }
+
 
         public Order()
         {
