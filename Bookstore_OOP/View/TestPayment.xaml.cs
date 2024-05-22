@@ -78,6 +78,8 @@ public partial class TestPayment : ContentPage
 
                     
                     Shell.Current.GoToAsync("//UserOrders");
+
+                   
                 }
             };
             Content = webView;
