@@ -9,9 +9,10 @@ public partial class UserShell : Shell
         //_serviceProvider = serviceProvider;
         InitializeComponent();
         Routing.RegisterRoute("SignInPage", typeof(SignInPage));
-       Routing.RegisterRoute("TestPayment", typeof(TestPayment));
+        Routing.RegisterRoute("TestPayment", typeof(TestPayment));
         Routing.RegisterRoute("UserOrders", typeof(UserOrders));
         Routing.RegisterRoute("UserCart", typeof(CartView));
+        Routing.RegisterRoute("OrderDetailsPage", typeof(OrderDetailsPage));
     }
 
     private async void LogOut_Button(object sender, EventArgs e)

@@ -156,6 +156,21 @@ namespace Bookstore_OOP.Model
                 }
             }
         }
+        [JsonIgnore]
+        private List<Book> _books;
+        [JsonIgnore]
+        public List<Book> Books
+        {
+            get { return _books; }
+            set
+            {
+                if (_books != value)
+                {
+                    _books = value;
+                    OnPropertyChanged(nameof(Books));
+                }
+            }
+        }
 
         //  [JsonProperty("amount")]
         public Amount Amount { get; set; }

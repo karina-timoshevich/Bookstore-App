@@ -20,9 +20,9 @@ namespace Bookstore_OOP.Services
     
         public DatabaseService()
         {
-            _connectionString = "Host=192.168.1.103;Port=5432;Username=karina;Password=password;Database=bookstore";
+            //_connectionString = "Host=192.168.1.103;Port=5432;Username=karina;Password=password;Database=bookstore";
             //_connectionString = "Host=10.0.2.2;Port=5432 ;Username=karina ;Password=password ;Database=bookstore";
-            //_connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
+            _connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
         }
 
         public void CreateTable()
@@ -379,7 +379,6 @@ namespace Bookstore_OOP.Services
                 {
                     cmd.Connection = connection;
 
-                    // SQL-запрос для получения всех книг
                     cmd.CommandText = "SELECT * FROM Books";
 
                     using (var reader = await cmd.ExecuteReaderAsync())
@@ -1349,6 +1348,89 @@ namespace Bookstore_OOP.Services
                     return result > 0;
                 }
             }
+        }
+
+        public List<Book> GetBooksByOrderId(int orderId)
+        {
+            List<Book> books = new List<Book>();
+
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                string query = @"SELECT Books.*
+                         FROM Books
+                         INNER JOIN OrderItems ON Books.ID = OrderItems.BookID
+                         WHERE OrderItems.OrderID = @OrderId";
+
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@OrderId", orderId);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Book book = new Book
+                            {
+                                Id = reader.GetInt32(0),
+                                Title = reader.GetString(1),
+                                // Добавьте остальные поля книги здесь
+                                Price = reader.GetDecimal(6),
+                            };
+
+                            books.Add(book);
+                        }
+                    }
+                }
+            }
+
+            return books;
+        }
+
+        public Order GetOrderDetails(int orderId)
+        {
+            Order order = null;
+
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                string query = @"SELECT Orders.ID, Orders.OrderDate, Orders.TotalPrice, OrderItems.BookID
+                         FROM Orders
+                         INNER JOIN OrderItems ON Orders.ID = OrderItems.OrderID
+                         WHERE Orders.ID = @OrderId";
+
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@OrderId", orderId);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            if (order == null)
+                            {
+                                order = new Order
+                                {
+                                    Id = reader.GetInt32(0),
+                                    OrderDate = reader.GetDateTime(1),
+                                    TotalPrice = reader.GetDecimal(2),
+                                    Books = new List<Book>()
+                                };
+                            }
+
+                            var bookId = reader.GetInt32(3);
+                            // Используйте метод GetBookById для получения информации о книге
+                            var book = GetBookById(bookId);
+                            // Добавьте книгу в список книг заказа
+                            order.Books.Add(book);
+                        }
+                    }
+                }
+            }
+
+            return order;
         }
     }
 

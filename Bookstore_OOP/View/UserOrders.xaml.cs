@@ -7,6 +7,7 @@ using Bookstore_OOP.ViewModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 public partial class UserOrders : ContentPage
 {
@@ -30,7 +31,8 @@ public partial class UserOrders : ContentPage
 
         if (selectedOrder != null)
         {
-            // Navigation.PushAsync(new OrderDetailsPage(selectedOrder));
+            Debug.WriteLine("\n" + selectedOrder.Id + "\n");
+            Navigation.PushAsync(new OrderDetailsPage(new OrderDetailsViewModel(selectedOrder)));
         }
     }
 }
