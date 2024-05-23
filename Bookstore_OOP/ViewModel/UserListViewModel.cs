@@ -65,15 +65,23 @@ namespace Bookstore_OOP.ViewModel
         [RelayCommand]
         private async Task BunUser()
         {
-            if (dbService.IsUserBannedById(_selectedUser.Id))
+            if (_selectedUser != null)
             {
-                await dbService.UnbanUser(_selectedUser.Id);
-                await Shell.Current.DisplayAlert("Title", "Unbun", "ok");
-            }
-            else
-            {
-                await dbService.BanUser(_selectedUser.Id);
-                await Shell.Current.DisplayAlert("Title", "bun", "ok");
+                if (dbService.IsUserBannedById(_selectedUser.Id))
+                {
+                    await dbService.UnbanUser(_selectedUser.Id);
+                    await Shell.Current.DisplayAlert("Title", "Unbun", "ok");
+                }
+                else
+                {
+                    await dbService.BanUser(_selectedUser.Id);
+                    await Shell.Current.DisplayAlert("Title", "bun", "ok");
+                }
+
+                // Обновляем статус бана для выбранного пользователя
+                var updatedUser = dbService.GetUsers().First(user => user.Id == _selectedUser.Id);
+                var index = Users.IndexOf(_selectedUser);
+                Users[index] = updatedUser;
             }
         }
 
