@@ -3,7 +3,14 @@
              x:Class="Bookstore_OOP.View.UserListView"
              xmlns:model="clr-namespace:Bookstore_OOP.Model"
              xmlns:xct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
+             xmlns:converters="clr-namespace:Bookstore_OOP.Converters"
              Title="UserListView">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:UserIdToBannedStatusConverter x:Key="UserIdToBannedStatusConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <Grid RowDefinitions="*, auto">
 
@@ -72,22 +79,23 @@
                         </ListView.Header>
 
                         <ListView.ItemTemplate>
-                            
                             <DataTemplate x:DataType="{x:Type model:User}">
                                 <ViewCell>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="35" />
-                                            <ColumnDefinition Width="130" />
-                                            <!--<ColumnDefinition Width="*" />-->
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
+                                    <ViewCell.View>
+                                        <Grid BackgroundColor="{Binding Id, Converter={StaticResource UserIdToBannedStatusConverter}}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="35" />
+                                                <ColumnDefinition Width="130" />
+                                                <!--<ColumnDefinition Width="*" />-->
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
 
-                                        <Label Grid.Column="0" Text="{Binding Id}" FontSize="22" VerticalOptions="Center" HorizontalOptions="Center" />
-                                        <Label Grid.Column="1" Text="{Binding Name}" FontSize="22" VerticalOptions="Center" HorizontalOptions="Center"/>
-                                        <!--<Label Grid.Column="2" Text="{Binding Email}" FontSize="Medium" VerticalOptions="Center" />-->
-                                        <Label Grid.Column="2" Text="{Binding PhoneNumber}" FontSize="20" VerticalOptions="Center" />
-                                    </Grid>
+                                            <Label Grid.Column="0" Text="{Binding Id}" FontSize="22" VerticalOptions="Center" HorizontalOptions="Center" />
+                                            <Label Grid.Column="1" Text="{Binding Name}" FontSize="22" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                            <!--<Label Grid.Column="2" Text="{Binding Email}" FontSize="Medium" VerticalOptions="Center" />-->
+                                            <Label Grid.Column="2" Text="{Binding PhoneNumber}" FontSize="20" VerticalOptions="Center" />
+                                        </Grid>
+                                    </ViewCell.View>
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
