@@ -1396,10 +1396,11 @@ namespace Bookstore_OOP.Services
             {
                 connection.Open();
 
-                string query = @"SELECT Orders.ID, Orders.OrderDate, Orders.TotalPrice, OrderItems.BookID
-                         FROM Orders
-                         INNER JOIN OrderItems ON Orders.ID = OrderItems.OrderID
-                         WHERE Orders.ID = @OrderId";
+                string query = @"SELECT Orders.ID, Orders.OrderDate, Orders.TotalPrice, OrderItems.BookID, Users.Name, Users.MobileNumber
+                 FROM Orders
+                 INNER JOIN OrderItems ON Orders.ID = OrderItems.OrderID
+                 INNER JOIN Users ON Orders.UserID = Users.ID
+                 WHERE Orders.ID = @OrderId";
 
                 using (var command = new NpgsqlCommand(query, connection))
                 {
@@ -1416,14 +1417,15 @@ namespace Bookstore_OOP.Services
                                     Id = reader.GetInt32(0),
                                     OrderDate = reader.GetDateTime(1),
                                     TotalPrice = reader.GetDecimal(2),
+                                    UserId = reader.GetInt32(3),
+                                    Username = reader.GetString(4),
+                                    PhoneNumber = reader.GetString(5),
                                     Books = new List<Book>()
                                 };
                             }
 
                             var bookId = reader.GetInt32(3);
-                            // Используйте метод GetBookById для получения информации о книге
                             var book = GetBookById(bookId);
-                            // Добавьте книгу в список книг заказа
                             order.Books.Add(book);
                         }
                     }

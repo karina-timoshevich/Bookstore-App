@@ -1,0 +1,33 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Bookstore_OOP.View.AdminOrderDetailsPage"
+             Title="Admin Order Details">
+    <StackLayout>
+        <Label Text="Order ID:" />
+        <Label Text="{Binding SelectedOrder.Id}" FontSize="Large" />
+
+        <Label Text="Order Date:" />
+        <Label Text="{Binding SelectedOrder.OrderDate}" FontSize="Large" />
+
+        <Label Text="Total Price:" />
+        <Label Text="{Binding SelectedOrder.TotalPrice}" FontSize="Large" />
+
+        <Label Text="User:" />
+        <Label Text="{Binding SelectedOrder.Username}" FontSize="Large" />
+
+        <Label Text="Phone Number:" />
+        <Label Text="{Binding SelectedOrder.PhoneNumber}" FontSize="Large" />
+
+        <Label Text="Books in Order:" />
+        <CollectionView ItemsSource="{Binding BooksInOrder}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Book Title:" />
+                        <Label Text="{Binding Title}" FontSize="Medium" />
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </StackLayout>
+</ContentPage>

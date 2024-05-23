@@ -171,6 +171,37 @@ namespace Bookstore_OOP.Model
                 }
             }
         }
+        [JsonIgnore]
+        private string _username;
+        [JsonIgnore]
+        public string Username
+        {
+            get { return _username; }
+            set
+            {
+                if (_username != value)
+                {
+                    _username = value;
+                    OnPropertyChanged(nameof(Username));
+                }
+            }
+        }
+
+        [JsonIgnore]
+        private string _phoneNumber;
+        [JsonIgnore]
+        public string PhoneNumber
+        {
+            get { return _phoneNumber; }
+            set
+            {
+                if (_phoneNumber != value)
+                {
+                    _phoneNumber = value;
+                    OnPropertyChanged(nameof(PhoneNumber));
+                }
+            }
+        }
 
         //  [JsonProperty("amount")]
         public Amount Amount { get; set; }

@@ -12,15 +12,21 @@ namespace Bookstore_OOP.View;
 
 public partial class AdminOrders : ContentPage
 {
-
     private AdminOrdersViewModel _adminOrdersViewModel;
     public AdminOrders()
     {
-
         InitializeComponent();
         _adminOrdersViewModel = new AdminOrdersViewModel();
         BindingContext = _adminOrdersViewModel;
-
+        OrdersListView.ItemSelected += OrdersListView_ItemSelected;
     }
-  
+
+    private async void OrdersListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+    {
+        var selectedOrder = e.SelectedItem as Order;
+        if (selectedOrder != null)
+        {
+            await Navigation.PushAsync(new AdminOrderDetailsPage(selectedOrder));
+        }
+    }
 }

@@ -2,24 +2,38 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Bookstore_OOP.View.OrderDetailsPage"
              Title="Order Details">
-    <StackLayout>
-        <Label Text="Order ID:" />
-        <Label Text="{Binding SelectedOrder.Id}" FontSize="Large" />
+    <StackLayout Padding="10">
+        <Frame Padding="10" Margin="5" CornerRadius="5">
+            <StackLayout>
+                <Label Text="Order ID:" />
+                <Label Text="{Binding SelectedOrder.Id}" FontSize="Large" />
+            </StackLayout>
+        </Frame>
 
-        <Label Text="Order Date:" />
-        <Label Text="{Binding SelectedOrder.OrderDate}" FontSize="Large" />
+        <Frame Padding="10" Margin="5" CornerRadius="5">
+            <StackLayout>
+                <Label Text="Order Date:" />
+                <Label Text="{Binding SelectedOrder.OrderDate, StringFormat='{0:dd/MM/yyyy}'}" FontSize="Large" />
+            </StackLayout>
+        </Frame>
 
-        <Label Text="Total Price:" />
-        <Label Text="{Binding SelectedOrder.TotalPrice}" FontSize="Large" />
+        <Frame Padding="10" Margin="5" CornerRadius="5">
+            <StackLayout>
+                <Label Text="Total Price:" />
+                <Label Text="{Binding SelectedOrder.TotalPrice}" FontSize="Large" />
+            </StackLayout>
+        </Frame>
 
-        <Label Text="Books in Order:" />
+        <Label Text="Books in Order:" Margin="5" />
         <CollectionView ItemsSource="{Binding BooksInOrder}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <StackLayout Orientation="Horizontal">
-                        <Label Text="Book Title:" />
-                        <Label Text="{Binding Title}" FontSize="Medium" />
-                    </StackLayout>
+                    <Frame Padding="10" Margin="5" CornerRadius="5" HeightRequest="50">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Book Title:" />
+                            <Label Text="{Binding Title}" FontSize="13" />
+                        </StackLayout>
+                    </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
