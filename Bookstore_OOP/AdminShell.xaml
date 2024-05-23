@@ -17,14 +17,14 @@
     ContentTemplate="{DataTemplate view:SignInPage}"
     Route="SignIn" />-->
     
-    <FlyoutItem Title="TEST">
+    <!--<FlyoutItem Title="TEST">
         <Tab>
             <ShellContent
          Title="TEST2"
          ContentTemplate="{DataTemplate view:AdminMainPage}"
          Route="UserMainPage" />
         </Tab>
-    </FlyoutItem>
+    </FlyoutItem>-->
 
     <FlyoutItem Title="User List">
         <Tab>

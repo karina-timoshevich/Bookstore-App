@@ -36,7 +36,7 @@ namespace Bookstore_OOP.ViewModel
         public UserListViewModel()
         {
             dbService.InitDB();
-            Users = new ObservableCollection<User>(dbService.GetUsers());
+            Users = new ObservableCollection<User>(dbService.GetUsers().OrderBy(user => user.Name));
         }
         [RelayCommand]
         private async Task RemoveUserAsync()
