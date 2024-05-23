@@ -16,9 +16,9 @@ namespace Bookstore_OOP.Model
             public string Title { get; set; }
             public int AuthorID { get; set; }
             public string Publisher { get; set; }
-            public int Year { get; set; }
+            public int? Year { get; set; }
             public string Genre { get; set; }
-            public decimal Price { get; set; }
+            public decimal? Price { get; set; }
             public string CoverPath { get; set; }
         }
 }

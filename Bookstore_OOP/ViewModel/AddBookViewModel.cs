@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using Bookstore_OOP.Services;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace Bookstore_OOP.ViewModel
 {
@@ -107,29 +108,45 @@ namespace Bookstore_OOP.ViewModel
                 Book = new();
                 await Shell.Current.DisplayAlert("This book is already in use", "Please try another one.", "Ok");
             }
+            else if (Book.Price == null)
+            {
+                await Shell.Current.DisplayAlert("Invalid price", "Price must be a number.", "Ok");
+            }
             else
             {
-                // Проверяем, существует ли автор в базе данных
-                var author = _dbService.GetAuthorByName(FullName);
-                if (author == null)
+                string priceString = Book.Price.ToString();
+                decimal parsedPrice;
+                if (!decimal.TryParse(priceString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out parsedPrice) || parsedPrice.ToString(CultureInfo.InvariantCulture) != priceString)
                 {
-                    // Если автора нет, добавляем нового автора в базу данных
-                    var newAuthor = new Author { FullName = this.FullName };
-                    _dbService.AddAuthor(newAuthor);
-                    Book.AuthorID = newAuthor.Id;
+                    await Shell.Current.DisplayAlert("Invalid price", "Price must be a number.", "Ok");
+                }
+                else if (Book.Year < 100 || Book.Year > DateTime.Now.Year)
+                {
+                    await Shell.Current.DisplayAlert("Invalid year", "Year must be between 100 and the current year.", "Ok");
                 }
                 else
                 {
-                    Book.AuthorID = author.Id;
+                    // Проверяем, существует ли автор в базе данных
+                    var author = _dbService.GetAuthorByName(FullName);
+                    if (author == null)
+                    {
+                        // Если автора нет, добавляем нового автора в базу данных
+                        var newAuthor = new Author { FullName = this.FullName };
+                        _dbService.AddAuthor(newAuthor);
+                        Book.AuthorID = newAuthor.Id;
+                    }
+                    else
+                    {
+                        Book.AuthorID = author.Id;
+                    }
+
+                    _dbService.AddBook(Book);
+                    await Shell.Current.DisplayAlert("Book added successfully", "Press Ok and return to the book list", "Ok");
+
+                    BackCommand.Execute(null);
                 }
-
-                _dbService.AddBook(Book);
-                await Shell.Current.DisplayAlert("Book added successfully", "Press Ok and return to the book list", "Ok");
-
-                BackCommand.Execute(null);
             }
         }
-
         public async Task AddAuthor(Author author)
         {
             // Проверяем, существует ли автор в базе данных
@@ -144,9 +161,9 @@ namespace Bookstore_OOP.ViewModel
         public async Task FetchAuthors(string input)
         {
             string _connectionString;
-            _connectionString = "Host=192.168.1.103;Port=5432;Username=karina;Password=password;Database=bookstore";
+            //_connectionString = "Host=192.168.1.103;Port=5432;Username=karina;Password=password;Database=bookstore";
             //_connectionString = "Host=10.0.2.2;Port=5432 ;Username=karina ;Password=password ;Database=bookstore";
-            //_connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
+            _connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 await connection.OpenAsync();

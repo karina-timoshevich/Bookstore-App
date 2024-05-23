@@ -8,7 +8,7 @@
              Title="AdminShell">
     
     <Shell.FlyoutFooter>
-        <Button Text="Log out"
+        <Button Text="Log out" Margin="10,10,10,10"
              Clicked="LogOutAdmin_Button"/>
     </Shell.FlyoutFooter>
 
