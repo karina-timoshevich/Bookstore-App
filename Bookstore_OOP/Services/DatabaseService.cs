@@ -20,9 +20,9 @@ namespace Bookstore_OOP.Services
     
         public DatabaseService()
         {
-            //_connectionString = "Host=192.168.1.103;Port=5432;Username=karina;Password=password;Database=bookstore";
+            _connectionString = "Host=192.168.1.103;Port=5432;Username=karina;Password=password;Database=bookstore";
             //_connectionString = "Host=10.0.2.2;Port=5432 ;Username=karina ;Password=password ;Database=bookstore";
-            _connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
+            //_connectionString = "Host=localhost ;Username=karina ;Password=password ;Database=bookstore";
         }
 
         public void CreateTable()
@@ -1329,5 +1329,27 @@ namespace Bookstore_OOP.Services
             }
            
         }
+
+        public bool IsUserBanned(int userId)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new NpgsqlCommand())
+                {
+                    cmd.Connection = connection;
+
+                    // SQL-запрос для проверки, есть ли пользователь в таблице BannedUsers
+                    cmd.CommandText = "SELECT COUNT(*) FROM BannedUsers WHERE UserID = @id";
+                    cmd.Parameters.AddWithValue("id", userId);
+
+                    var result = (long)cmd.ExecuteScalar();
+
+                    return result > 0;
+                }
+            }
+        }
     }
+
 }
